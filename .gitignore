@@ -1,0 +1,69 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+.venv/
+envs/
+ENV/
+
+# Environment variables and secrets
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
+secrets/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datasets (raw data is not committed)
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.feather
+*.arff
+
+# Model weights and artifacts
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+models/
+artifacts/
+mlruns/
+wandb/
+*.ubj
+
+# Results and local experiment outputs
+results/**/*.png
+results/**/*.pdf
+results/**/*.html
+experiments/
+logs/
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
