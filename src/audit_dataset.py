@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 
-
 # for finding the directory that contains the path for data 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(BASE, "data", "raw")
