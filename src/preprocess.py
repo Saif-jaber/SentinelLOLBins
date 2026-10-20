@@ -20,6 +20,7 @@ def load_ids(name):
 train_ids = load_ids("train")
 val_ids = load_ids("val")
 test_ids = load_ids("test")
+holdout_ids = load_ids("holdout")
 
 print("train ids:", len(train_ids))
 print("val ids:", len(val_ids))
@@ -29,10 +30,12 @@ print("test ids:", len(test_ids))
 train = df[df["record_id"].isin(train_ids)]
 val = df[df["record_id"].isin(val_ids)]
 test = df[df["record_id"].isin(test_ids)]
+holdout = df[df["record_id"].isin(holdout_ids)] # withheld techniques for E4
 
 print("train rows:", len(train))
 print("val rows:", len(val))
 print("test rows:", len(test))
+print("holdout rows:", len(holdout))
 
 # dropping the non useful / harmful data for processing
 DROP = [
@@ -60,26 +63,33 @@ pre = ColumnTransformer([
 X_train = pre.fit_transform(train[features]) # the input features
 X_val   = pre.transform(val[features])
 X_test  = pre.transform(test[features])
+X_holdout = pre.transform(holdout[features]) # transform only, never fit
 
 y_train = train["label"] # the target labels for each 
 y_val   = val["label"]
 y_test  = test["label"]
+y_holdout = holdout["label"]
 
 print("X_train:", X_train.shape)
 print("X_val:", X_val.shape)
 print("X_test:", X_test.shape)
 
-#
+# folder for saved models
 MODEL_DIR = os.path.join(BASE, "results", "models")
-os.makedirs(MODEL_DIR, exist_ok=True)
+os.makedirs(MODEL_DIR, exist_ok=True) # create it if missing
 
-joblib.dump(pre, os.path.join(MODEL_DIR, "preprocessor.joblib")) # save the preprocessor
+joblib.dump(pre, os.path.join(MODEL_DIR, "preprocessor.joblib")) # save the preprocessor to reuse
 
-cols = pre.get_feature_names_out()
-for name, X, y in [("train", X_train, y_train), ("val", X_val, y_val), ("test", X_test, y_test)]:
-    out = pd.DataFrame(X, columns=cols)
-    out["label"] = y.values
-    out.to_parquet(os.path.join(PROC, f"xgb_{name}.parquet"), index=False)
+cols = pre.get_feature_names_out() # real names of the encoded columns
+for name, X, y in [
+    ("train", X_train, y_train),
+    ("val", X_val, y_val),
+    ("test", X_test, y_test),
+    ("holdout", X_holdout, y_holdout),
+]:
+    out = pd.DataFrame(X, columns=cols) # turns numpy matrix into a proper pandas table with proper columns names
+    out["label"] = y.values # last column that has the targets
+    out.to_parquet(os.path.join(PROC, f"xgb_{name}.parquet"), index=False) # save each split
     print(name, out.shape)
 
-print("saved preprocessor + matrices")
+print("saved preprocessor + matrices") 
