@@ -8,7 +8,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 RESULT_DIR = os.path.join(BASE, "results")
 
-# same loader as the training script
+# loading the same xgb files like in the training script
 def load(name):
     return pd.read_parquet(os.path.join(PROC, f"xgb_{name}.parquet"))
 
@@ -24,12 +24,12 @@ y_holdout = holdout["label"]
 
 all_cols = [c for c in train.columns if c != "label"]
 
-# feature groups from the encoded column names
+# splitting the encoded columns into groups based on their names
 name_cols = [c for c in all_cols if c.startswith("cat__process_name_")]
 parent_cols = [c for c in all_cols if c.startswith("cat__parent_process_")]
 cmd_cols = [c for c in all_cols if c.startswith("num__cmd_") or c.startswith("num__flag_")]
 
-# the 4 versions we compare
+# the 4 versions to compare
 variants = {
     "name only": name_cols,
     "name + parent + cmd": name_cols + parent_cols + cmd_cols,
@@ -74,7 +74,7 @@ for title, cols in variants.items():
     rows.append(row)
     print(f"done: {title}")
 
-# results table for the report
+# table of results for the report
 results = pd.DataFrame(rows)
 print("\nE3 ablation (test set + E4 holdout):")
 print(results.to_string(index=False))

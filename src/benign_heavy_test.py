@@ -9,7 +9,7 @@ PROC = os.path.join(BASE, "data", "processed")
 MODEL_DIR = os.path.join(BASE, "results", "models")
 RESULT_DIR = os.path.join(BASE, "results")
 
-# loading the already trained model, no retraining here
+# loading the trained model, no training here
 model = joblib.load(os.path.join(MODEL_DIR, "xgb_baseline.joblib"))
 
 test = pd.read_parquet(os.path.join(PROC, "xgb_test.parquet"))
@@ -22,7 +22,6 @@ mal = test[test["label"] == 1]
 # realistic prevalence, 1 malicious per 100 benign (about 1%)
 n_mal = max(1, len(benign) // 100)
 mal_slice = mal.sample(n_mal, random_state=42)
-
 heavy = pd.concat([benign, mal_slice], ignore_index=True)
 Xh = heavy.drop(columns=["label"])
 yh = heavy["label"]
@@ -38,14 +37,14 @@ print(f"precision={precision_score(yh, pred):.3f} recall={recall_score(yh, pred)
 print(f"tn={tn} fp={fp} fn={fn} tp={tp}")
 print(f"false alarms per 10,000 benign events: {fp / len(benign) * 10000:.1f}")
 
-# same set at a higher threshold to show the precision trade-off
+# checking higher thresholds to see how precision and recall move
 for t in [0.5, 0.9, 0.99]:
     pred_t = (proba >= t).astype(int)
     tn_, fp_, fn_, tp_ = confusion_matrix(yh, pred_t).ravel()
     print(f"t={t:.2f} precision={precision_score(yh, pred_t):.3f} "
           f"recall={recall_score(yh, pred_t):.3f} fpr={fp_ / (fp_ + tn_):.4f}")
 
-# save the benign-heavy picture too
+# saving the summary numbers
 out = pd.DataFrame([{
     "n_benign": len(benign),
     "n_malicious": len(mal_slice),
