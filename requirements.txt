@@ -7,3 +7,4 @@ torch
 pyarrow
 joblib
 tqdm
+flask
