@@ -28,10 +28,13 @@ all_cols = [c for c in train.columns if c != "label"]
 name_cols = [c for c in all_cols if c.startswith("cat__process_name_")]
 parent_cols = [c for c in all_cols if c.startswith("cat__parent_process_")]
 cmd_cols = [c for c in all_cols if c.startswith("num__cmd_") or c.startswith("num__flag_")]
+context_cols = [c for c in all_cols if c not in name_cols + parent_cols + cmd_cols]
 
-# the 4 versions to compare
+# RQ1 contrast: executable name alone vs each added context block.
+# "full without process name" keeps parent/cmd/context, it only drops the name.
 variants = {
     "name only": name_cols,
+    "name + parent": name_cols + parent_cols,
     "name + parent + cmd": name_cols + parent_cols + cmd_cols,
     "full context": all_cols,
     "full without process name": [c for c in all_cols if c not in name_cols],
@@ -40,6 +43,24 @@ variants = {
 print("features per variant:")
 for k, v in variants.items():
     print(f"  {k}: {len(v)}")
+
+# threshold is tuned on validation per variant, never on test
+def choose_threshold(proba, y):
+    best_t, best_f1 = 0.5, -1.0
+    for t in [round(x * 0.05, 2) for x in range(1, 20)]:
+        f1 = f1_score(y, (proba >= t).astype(int))
+        if f1 > best_f1 or (f1 == best_f1 and t > best_t):
+            best_t, best_f1 = t, f1
+    return best_t
+
+def summarize(y, pred):
+    tn, fp, fn, tp = confusion_matrix(y, pred).ravel()
+    return {
+        "precision": round(precision_score(y, pred), 3),
+        "recall": round(recall_score(y, pred), 3),
+        "f1": round(f1_score(y, pred), 3),
+        "fpr": round(fp / (fp + tn), 4),
+    }
 
 rows = []
 for title, cols in variants.items():
@@ -55,28 +76,33 @@ for title, cols in variants.items():
     )
     model.fit(train[cols], y_train, eval_set=[(val[cols], y_val)], verbose=False)
 
-    proba = model.predict_proba(test[cols])[:, 1]
-    pred = (proba >= 0.5).astype(int)
-    tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
+    p_val = model.predict_proba(val[cols])[:, 1]
+    threshold = choose_threshold(p_val, y_val)
 
-    proba_h = model.predict_proba(holdout[cols])[:, 1]
-    pred_h = (proba_h >= 0.5).astype(int)
+    p_test = model.predict_proba(test[cols])[:, 1]
+    pred_test = (p_test >= threshold).astype(int)
+    te = summarize(y_test, pred_test)
+
+    p_hold = model.predict_proba(holdout[cols])[:, 1]
+    pred_hold = (p_hold >= threshold).astype(int)
+    hold_recall = recall_score(y_holdout, pred_hold)
 
     row = {
         "variant": title,
         "n_features": len(cols),
-        "precision": round(precision_score(y_test, pred), 3),
-        "recall": round(recall_score(y_test, pred), 3),
-        "f1": round(f1_score(y_test, pred), 3),
-        "fpr": round(fp / (fp + tn), 4),
-        "holdout_recall": round(recall_score(y_holdout, pred_h), 3),
+        "threshold": threshold,
+        "precision": te["precision"],
+        "recall": te["recall"],
+        "f1": te["f1"],
+        "fpr": te["fpr"],
+        "holdout_recall": round(hold_recall, 3),
     }
     rows.append(row)
-    print(f"done: {title}")
+    print(f"done: {title} -> t={threshold}")
 
 # table of results for the report
 results = pd.DataFrame(rows)
-print("\nE3 ablation (test set + E4 holdout):")
+print("\nE3 ablation (threshold tuned on val; test set + E4 holdout):")
 print(results.to_string(index=False))
 
 os.makedirs(RESULT_DIR, exist_ok=True)

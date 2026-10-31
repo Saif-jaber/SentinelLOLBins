@@ -1,0 +1,9 @@
+{
+  "checkpoint": "cisco-ai/SecureBERT2.0-base",
+  "pooling": "mean",
+  "scaler": "StandardScaler fit on train",
+  "C": 0.1,
+  "threshold": 0.2,
+  "selected_on": "validation F1",
+  "seed": 42
+}

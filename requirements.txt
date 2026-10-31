@@ -2,9 +2,11 @@ pandas
 numpy
 scikit-learn
 xgboost
-transformers
-torch
+transformers>=4.48,<5
+tokenizers>=0.21
+torch>=2.2
 pyarrow
 joblib
 tqdm
+matplotlib
 flask
