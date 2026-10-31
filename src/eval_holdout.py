@@ -28,7 +28,10 @@ features = [c for c in df.columns if c not in DROP]
 
 pre = joblib.load(os.path.join(MODEL_DIR, "preprocessor.joblib"))
 model = joblib.load(os.path.join(MODEL_DIR, "xgb_baseline.joblib"))
-THRESHOLD = 0.5
+
+# use the validation-selected threshold when available
+thr_path = os.path.join(RESULT_DIR, "chosen_threshold.json")
+THRESHOLD = json.load(open(thr_path))["threshold"] if os.path.exists(thr_path) else 0.5
 
 # E4 withheld techniques (malicious only)
 holdout = df[df["record_id"].isin(load_ids("holdout"))]
