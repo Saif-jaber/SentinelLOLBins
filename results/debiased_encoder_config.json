@@ -1,0 +1,10 @@
+{
+  "checkpoint": "cisco-ai/SecureBERT2.0-base",
+  "dataset": "data\\processed\\sample_100k_debiased.parquet",
+  "pooling": "mean",
+  "scaler": "StandardScaler fit on train",
+  "C": 0.1,
+  "threshold": 0.35,
+  "selected_on": "validation F1",
+  "seed": 42
+}

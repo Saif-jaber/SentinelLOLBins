@@ -1,5 +1,7 @@
 import os
 import json
+import argparse
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -9,8 +11,28 @@ from sklearn.metrics import precision_score, recall_score, f1_score, confusion_m
 #path stuff
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
-OUT = os.path.join(PROC, "securebert")
 RESULT_DIR = os.path.join(BASE, "results")
+
+p = argparse.ArgumentParser()
+p.add_argument("--emb-dir", default=os.path.join(PROC, "securebert"))
+p.add_argument("--results-dir", default=RESULT_DIR)
+p.add_argument("--prefix", default="", help="prefix for output file names")
+p.add_argument("--xgb-results", default=os.path.join(RESULT_DIR, "threshold_test.csv"))
+p.add_argument("--xgb-model-name", default="XGBoost (full context)")
+p.add_argument("--comparison-name", default="e2_comparison.csv")
+p.add_argument("--debiased", action="store_true", help="use debiased embeddings and comparison baselines")
+args = p.parse_args()
+
+if args.debiased:
+    args.emb_dir = os.path.join(PROC, "securebert_debiased")
+    args.prefix = "debiased_"
+    args.xgb_results = os.path.join(RESULT_DIR, "debias_xgb.csv")
+    args.xgb_model_name = "XGBoost (debiased dataset)"
+    args.comparison_name = "e2_comparison_debiased.csv"
+
+OUT = args.emb_dir
+RESULT_DIR = args.results_dir
+os.makedirs(RESULT_DIR, exist_ok=True)
 
 def load(name):
     emb = np.load(os.path.join(OUT, f"{name}_emb.npy"))
@@ -45,7 +67,7 @@ def choose_threshold(proba, y):
     best_t, best_f1 = 0.5, -1.0
     for t in [round(x * 0.05, 2) for x in range(1, 20)]:
         f1 = f1_score(y, (proba >= t).astype(int), zero_division=0)
-        if f1 > best_f1 or (f1 == best_f1 and t > best_t):
+        if f1 > best_f1:
             best_t, best_f1 = t, f1
     return best_t
 
@@ -60,11 +82,15 @@ for C in [0.1, 1.0, 10.0]:
     print(f"C={C}: val threshold={t} val_f1={f1:.4f}")
     if best is None or f1 > best[0]:
         best = (f1, C, t, clf)
-    else:
-        pass
 
 val_f1, CHOSEN_C, CHOSEN_T, clf = best
 print("chosen C:", CHOSEN_C, "| threshold:", CHOSEN_T)
+
+# persist the head for fusion / score_event
+MODEL_DIR = os.path.join(BASE, "results", "models")
+os.makedirs(MODEL_DIR, exist_ok=True)
+joblib.dump(scaler, os.path.join(MODEL_DIR, f"{args.prefix}encoder_scaler.joblib"))
+joblib.dump(clf, os.path.join(MODEL_DIR, f"{args.prefix}encoder_head.joblib"))
 
 p_te = clf.predict_proba(Zte)[:, 1]
 pred_te = (p_te >= CHOSEN_T).astype(int)
@@ -78,9 +104,10 @@ ho_recall = recall_score(yho, pred_ho, zero_division=0)
 ben_mask = yte == 0
 ben_fpr = pred_te[ben_mask].mean()
 
+meta = json.load(open(os.path.join(OUT, "encoder_meta.json")))
 row = {
     "model": "SecureBERT2.0 frozen + logistic",
-    "checkpoint": json.load(open(os.path.join(OUT, "encoder_meta.json")))["checkpoint"],
+    "checkpoint": meta["checkpoint"],
     "C": CHOSEN_C,
     "threshold": CHOSEN_T,
     "precision": round(te["precision"], 3),
@@ -90,10 +117,10 @@ row = {
     "holdout_recall": round(ho_recall, 3),
     "holdout_benign_fpr": round(float(ben_fpr), 4),
 }
-pd.DataFrame([row]).to_csv(os.path.join(RESULT_DIR, "e2_encoder.csv"), index=False)
+pd.DataFrame([row]).to_csv(os.path.join(RESULT_DIR, f"{args.prefix}e2_encoder.csv"), index=False)
 print(row)
 
-# Y. grouped bootstrap CI on test
+# grouped bootstrap CI on test
 group_ids = mte["cmd_normalized"].values
 groups = {}
 for i, g in enumerate(group_ids):
@@ -118,26 +145,27 @@ ci = pd.DataFrame([{
     "n_boot": 1000,
     "unit": "command template (grouped)",
 } for i, m in enumerate(["precision", "recall", "f1", "fpr"])])
-ci.to_csv(os.path.join(RESULT_DIR, "ci_encoder.csv"), index=False)
+ci.to_csv(os.path.join(RESULT_DIR, f"{args.prefix}ci_encoder.csv"), index=False)
 print(ci.to_string(index=False))
 
-# E2 comparison table: XGBoost (validation threshold) vs encoder
-xgb = pd.read_csv(os.path.join(RESULT_DIR, "threshold_test.csv")).iloc[0]
+# E2 comparison table: XGBoost vs encoder
+xgb = pd.read_csv(args.xgb_results).iloc[0]
 comp = pd.DataFrame([
-    {"model": "XGBoost (full context)", "threshold": xgb["threshold"],
+    {"model": args.xgb_model_name, "threshold": xgb["threshold"],
      "precision": xgb["precision"], "recall": xgb["recall"],
      "f1": xgb["f1"], "fpr": xgb["fpr"]},
     {"model": row["model"], "threshold": row["threshold"],
      "precision": row["precision"], "recall": row["recall"],
      "f1": row["f1"], "fpr": row["fpr"]},
 ])
-comp.to_csv(os.path.join(RESULT_DIR, "e2_comparison.csv"), index=False)
+comp.to_csv(os.path.join(RESULT_DIR, args.comparison_name), index=False)
 print("\nE2 comparison:")
 print(comp.to_string(index=False))
 
-with open(os.path.join(RESULT_DIR, "encoder_config.json"), "w") as f:
+with open(os.path.join(RESULT_DIR, f"{args.prefix}encoder_config.json"), "w") as f:
     json.dump({
         "checkpoint": row["checkpoint"],
+        "dataset": meta.get("dataset"),
         "pooling": "mean",
         "scaler": "StandardScaler fit on train",
         "C": CHOSEN_C,
@@ -145,4 +173,4 @@ with open(os.path.join(RESULT_DIR, "encoder_config.json"), "w") as f:
         "selected_on": "validation F1",
         "seed": 42,
     }, f, indent=2)
-print("\nsaved results/e2_encoder.csv, ci_encoder.csv, e2_comparison.csv, encoder_config.json")
+print(f"\nsaved {args.prefix}e2_encoder.csv, {args.prefix}ci_encoder.csv, {args.comparison_name}, {args.prefix}encoder_config.json")

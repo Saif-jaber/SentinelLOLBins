@@ -31,7 +31,13 @@ assert (test["label"].values == mat["label"].values).all(), "rows are not aligne
 
 model = joblib.load(os.path.join(MODEL_DIR, "xgb_baseline.joblib"))
 proba = model.predict_proba(mat.drop(columns=["label"]))[:, 1]
-pred = (proba >= 0.5).astype(int)
+
+THRESHOLD = 0.5  # fallback only
+thr_path = os.path.join(RESULT_DIR, "chosen_threshold.json")
+if os.path.exists(thr_path):
+    THRESHOLD = json.load(open(thr_path))["threshold"]  # selected on val, never test
+
+pred = (proba >= THRESHOLD).astype(int)
 
 tn, fp, fn, tp = confusion_matrix(test["label"], pred).ravel()
 print(f"tn={tn} fp={fp} fn={fn} tp={tp}")
@@ -81,7 +87,7 @@ ap = average_precision_score(test["label"], proba)
 
 fig, ax = plt.subplots(figsize=(6, 4))
 ax.plot(rec, prec, label=f"XGBoost (AP={ap:.4f})")
-for t, color in [(0.5, "tab:red"), (0.9, "tab:green")]:
+for t, color in sorted({(0.5, "tab:red"), (THRESHOLD, "tab:green")}):
     i = (thr >= t).argmax() if (thr >= t).any() else len(rec) - 1
     ax.scatter(rec[i], prec[i], color=color, zorder=3, label=f"t={t}")
 ax.set_xlabel("Recall")

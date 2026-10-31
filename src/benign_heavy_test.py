@@ -1,4 +1,5 @@
 import os
+import json
 import pandas as pd
 import joblib
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
@@ -29,7 +30,13 @@ yh = heavy["label"]
 print("benign-heavy set:", len(heavy), "| benign:", len(benign), "| malicious:", len(mal_slice))
 
 proba = model.predict_proba(Xh)[:, 1]
-pred = (proba >= 0.5).astype(int)
+
+THRESHOLD = 0.5  # fallback only
+thr_path = os.path.join(RESULT_DIR, "chosen_threshold.json")
+if os.path.exists(thr_path):
+    THRESHOLD = json.load(open(thr_path))["threshold"]  # selected on val, never test
+
+pred = (proba >= THRESHOLD).astype(int)
 
 tn, fp, fn, tp = confusion_matrix(yh, pred).ravel()
 print(f"precision={precision_score(yh, pred):.3f} recall={recall_score(yh, pred):.3f} "
@@ -38,23 +45,27 @@ print(f"tn={tn} fp={fp} fn={fn} tp={tp}")
 print(f"false alarms per 10,000 benign events: {fp / len(benign) * 10000:.1f}")
 
 # checking higher thresholds to see how precision and recall move
-for t in [0.5, 0.9, 0.99]:
+rows = []
+for t in sorted({THRESHOLD, 0.5, 0.9, 0.99}):
     pred_t = (proba >= t).astype(int)
     tn_, fp_, fn_, tp_ = confusion_matrix(yh, pred_t).ravel()
     print(f"t={t:.2f} precision={precision_score(yh, pred_t):.3f} "
           f"recall={recall_score(yh, pred_t):.3f} fpr={fp_ / (fp_ + tn_):.4f}")
+    rows.append({
+        "threshold": t,
+        "n_benign": len(benign),
+        "n_malicious": len(mal_slice),
+        "precision": round(precision_score(yh, pred_t, zero_division=0), 3),
+        "recall": round(recall_score(yh, pred_t, zero_division=0), 3),
+        "f1": round(f1_score(yh, pred_t, zero_division=0), 3),
+        "fpr": round(fp_ / (fp_ + tn_), 4),
+        "fp": int(fp_),
+        "fn": int(fn_),
+        "fp_per_10k_benign": round(fp_ / len(benign) * 10000, 1),
+    })
 
 # saving the summary numbers
-out = pd.DataFrame([{
-    "n_benign": len(benign),
-    "n_malicious": len(mal_slice),
-    "precision": round(precision_score(yh, pred), 3),
-    "recall": round(recall_score(yh, pred), 3),
-    "f1": round(f1_score(yh, pred), 3),
-    "fpr": round(fp / (fp + tn), 4),
-    "fp": int(fp),
-    "fn": int(fn),
-}])
+out = pd.DataFrame(rows)
 os.makedirs(RESULT_DIR, exist_ok=True)
 out.to_csv(os.path.join(RESULT_DIR, "benign_heavy_results.csv"), index=False)
 print("\nsaved results/benign_heavy_results.csv")

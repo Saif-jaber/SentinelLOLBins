@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import argparse
 import numpy as np
 import pandas as pd
 import torch
@@ -9,23 +10,33 @@ from transformers import AutoTokenizer, AutoModel
 #path stuff
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
-SPLITS = os.path.join(BASE, "data", "splits")
-OUT = os.path.join(PROC, "securebert")
+
+p = argparse.ArgumentParser()
+p.add_argument("--dataset", default=os.path.join(PROC, "sample_100k.parquet"))
+p.add_argument("--splits", default=os.path.join(BASE, "data", "splits"))
+p.add_argument("--out", default=os.path.join(PROC, "securebert"))
+p.add_argument("--checkpoint", default="cisco-ai/SecureBERT2.0-base")
+p.add_argument("--max-len", type=int, default=128)
+p.add_argument("--batch", type=int, default=32)
+args = p.parse_args()
+
+OUT = args.out
 os.makedirs(OUT, exist_ok=True)
 
-CHECKPOINT = "cisco-ai/SecureBERT2.0-base"  # fallback: ehsanaghaei/SecureBERT
-MAX_LEN = 128
-BATCH = 32
+CHECKPOINT = args.checkpoint  # fallback: ehsanaghaei/SecureBERT
+MAX_LEN = args.max_len
+BATCH = args.batch
 POOLING = "mean"
 
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 def load_ids(name):
-    with open(os.path.join(SPLITS, f"{name}.json")) as f:
+    with open(os.path.join(args.splits, f"{name}.json")) as f:
         return set(json.load(f)["record_ids"])
 
-df = pd.read_parquet(os.path.join(PROC, "sample_100k.parquet"))
+df = pd.read_parquet(args.dataset)
+print("dataset:", args.dataset, "| splits:", args.splits, "| out:", OUT)
 
 print("loading", CHECKPOINT)
 tok = AutoTokenizer.from_pretrained(CHECKPOINT)
@@ -66,6 +77,8 @@ for name in ["train", "val", "test", "holdout"]:
 
 meta = {
     "checkpoint": CHECKPOINT,
+    "dataset": os.path.relpath(args.dataset, BASE),
+    "splits": os.path.relpath(args.splits, BASE),
     "max_length": MAX_LEN,
     "batch_size": BATCH,
     "pooling": POOLING,

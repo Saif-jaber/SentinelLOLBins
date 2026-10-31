@@ -1,10 +1,10 @@
 {
-  "threshold": 0.9,
+  "threshold": 0.55,
   "selected_on": "validation",
-  "criterion": "max F1, tie-break higher threshold",
-  "val_precision": 1.0,
-  "val_recall": 0.999,
+  "criterion": "max F1 (exact), tie-break lower threshold",
+  "val_precision": 0.999,
+  "val_recall": 1.0,
   "val_f1": 0.999,
-  "val_fpr": 0.0004,
+  "val_fpr": 0.0011,
   "seed": 42
 }

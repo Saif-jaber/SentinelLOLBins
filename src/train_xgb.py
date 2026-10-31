@@ -1,4 +1,5 @@
 import os
+import json
 import pandas as pd
 from xgboost import XGBClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
@@ -71,7 +72,11 @@ for t in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]:
     print(f"t={t:.1f} precision={precision_score(y_val, pred):.3f} "
           f"recall={recall_score(y_val, pred):.3f} f1={f1_score(y_val, pred):.3f}")
 
-THRESHOLD = 0.5  # picked from the val table not from test
+THRESHOLD = 0.5  # fallback only
+thr_path = os.path.join(BASE, "results", "chosen_threshold.json")
+if os.path.exists(thr_path):
+    THRESHOLD = json.load(open(thr_path))["threshold"]  # selected on val, never test
+print(f"\nusing validation-selected threshold: {THRESHOLD}")
 
 # final test check, only run once
 proba_test = model.predict_proba(X_test)[:, 1]

@@ -49,7 +49,7 @@ def choose_threshold(proba, y):
     best_t, best_f1 = 0.5, -1.0
     for t in [round(x * 0.05, 2) for x in range(1, 20)]:
         f1 = f1_score(y, (proba >= t).astype(int))
-        if f1 > best_f1 or (f1 == best_f1 and t > best_t):
+        if f1 > best_f1:
             best_t, best_f1 = t, f1
     return best_t
 

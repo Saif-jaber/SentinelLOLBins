@@ -1,0 +1,9 @@
+{
+  "dataset": "debiased",
+  "fusion": "weighted average of calibrated probabilities",
+  "w_xgb": 0.8,
+  "w_encoder": 0.2,
+  "threshold": 0.7,
+  "selected_on": "validation (F1, tie-break lower FPR)",
+  "seed": 42
+}

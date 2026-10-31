@@ -59,6 +59,7 @@ for t in np.round(np.arange(0.05, 1.0, 0.05), 2):
         "precision": round(prec, 3),
         "recall": round(rec, 3),
         "f1": round(f1, 3),
+        "f1_exact": round(f1, 6),
         "fpr": round(fpr, 4),
         "tp": tp, "fp": fp, "fn": fn, "tn": tn,
     })
@@ -66,8 +67,8 @@ for t in np.round(np.arange(0.05, 1.0, 0.05), 2):
 sweep = pd.DataFrame(rows)
 sweep.to_csv(os.path.join(RESULT_DIR, "threshold_sweep_val.csv"), index=False)
 
-# pick by validation F1, tie-break to the higher threshold (fewer false alarms)
-best = sweep.sort_values(["f1", "threshold"], ascending=[False, False]).iloc[0]
+# pick by exact validation F1; on ties keep the lowest threshold (higher recall)
+best = sweep.sort_values(["f1_exact", "threshold"], ascending=[False, True]).iloc[0]
 CHOSEN = float(best["threshold"])
 print("chosen threshold (val F1):", CHOSEN)
 
@@ -75,7 +76,7 @@ with open(os.path.join(RESULT_DIR, "chosen_threshold.json"), "w") as f:
     json.dump({
         "threshold": CHOSEN,
         "selected_on": "validation",
-        "criterion": "max F1, tie-break higher threshold",
+        "criterion": "max F1 (exact), tie-break lower threshold",
         "val_precision": float(best["precision"]),
         "val_recall": float(best["recall"]),
         "val_f1": float(best["f1"]),

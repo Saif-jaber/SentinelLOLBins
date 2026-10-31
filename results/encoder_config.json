@@ -1,5 +1,6 @@
 {
   "checkpoint": "cisco-ai/SecureBERT2.0-base",
+  "dataset": null,
   "pooling": "mean",
   "scaler": "StandardScaler fit on train",
   "C": 0.1,
