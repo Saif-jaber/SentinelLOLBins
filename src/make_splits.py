@@ -62,9 +62,17 @@ val   = pd.concat([ben_val,   mal_val],   ignore_index=True)
 test  = pd.concat([ben_test,  mal_test],  ignore_index=True)
 
 sets = [set(s["cmd_normalized"]) for s in (train, val, test)]
-print("train∩val:", len(sets[0] & sets[1]))
-print("train∩test:", len(sets[0] & sets[2]))
-print("val∩test:", len(sets[1] & sets[2]))
+print("train/val overlap:", len(sets[0] & sets[1]))
+print("train/test overlap:", len(sets[0] & sets[2]))
+print("val/test overlap:", len(sets[1] & sets[2]))
+
+# E4 must not leak: drop held-out-technique rows whose command template already
+# appears in train/val/test (only affects the holdout set, not the other splits)
+seen_templates = sets[0] | sets[1] | sets[2]
+holdout_before = len(holdout)
+holdout = holdout[~holdout["cmd_normalized"].isin(seen_templates)]
+holdout_overlap_dropped = holdout_before - len(holdout)
+print("holdout overlap dropped:", holdout_overlap_dropped, "| kept:", len(holdout))
 
 # manifest for the evidence and for later tracebility and later debugging or model use
 SPLIT_DIR = os.path.join(BASE, "data", "splits")
@@ -93,6 +101,8 @@ manifest = {
     "group_key": "cmd_normalized",
     "ratios": [0.70, 0.15, 0.15],
     "holdout_techniques": holdout_techs,
+    "holdout_template_overlap_dropped": int(holdout_overlap_dropped),
+    "holdout_n_rows": int(len(holdout)),
 }
 with open(os.path.join(SPLIT_DIR, "manifest.json"), "w") as f:
     json.dump(manifest, f, indent=2)

@@ -23,5 +23,7 @@
     "T1543.003",
     "T1552.001",
     "T1564.004"
-  ]
+  ],
+  "holdout_template_overlap_dropped": 352,
+  "holdout_n_rows": 8122
 }
