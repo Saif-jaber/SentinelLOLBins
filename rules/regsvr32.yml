@@ -1,0 +1,12 @@
+- id: RULE-REGSVR32-001
+  title: Regsvr32 scriptlet execution
+  attack: T1218.010
+  severity: medium
+  applies_to_process:
+    - regsvr32.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)\.(js|vbs|jscript|wscript|wsf|vbe|hta|ps1)\b'
+  reason: Regsvr32 used to execute a scriptlet or script-backed binary
+  references:
+    - https://attack.mitre.org/techniques/T1218/010/

@@ -1,0 +1,14 @@
+- id: RULE-CERTUTIL-001
+  title: Certutil download or decode utility
+  attack: T1105
+  severity: high
+  applies_to_process:
+    - certutil.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)-urlcache'
+      - command_line_regex: '(?i)https?://'
+      - command_line_regex: '(?i)-decode'
+  reason: Certutil used for download, fetch or payload decode
+  references:
+    - https://attack.mitre.org/techniques/T1105/

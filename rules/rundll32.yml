@@ -1,0 +1,21 @@
+- id: RULE-RUNDLL32-001
+  title: rundll32 pass-through execution from non-shell parent
+  attack: T1218.011
+  severity: medium
+  applies_to_process:
+    - rundll32.exe
+  conditions:
+    all:
+      - parent_is:
+          - winword.exe
+          - excel.exe
+          - powerpnt.exe
+          - outlook.exe
+          - msaccess.exe
+          - onenote.exe
+          - chrome.exe
+          - firefox.exe
+          - iexplore.exe
+  reason: rundll32 executed by a document or browser parent (pass-through execution)
+  references:
+    - https://attack.mitre.org/techniques/T1218/011/

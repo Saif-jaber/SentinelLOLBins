@@ -1,0 +1,14 @@
+- id: RULE-PSEXEC-001
+  title: PsExec remote service execution
+  attack: T1021.002
+  severity: high
+  applies_to_process:
+    - psexec.exe
+    - services.exe
+    - sc.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)^\\\\[^\s]+'
+  reason: PsExec-style remote execution via UNC path or service control
+  references:
+    - https://attack.mitre.org/techniques/T1021/002/

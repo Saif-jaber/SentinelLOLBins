@@ -1,0 +1,14 @@
+- id: RULE-WMI-001
+  title: WMI process creation
+  attack: T1047
+  severity: high
+  applies_to_process:
+    - wmiprvse.exe
+    - wmic.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)process call create'
+      - command_line_regex: '(?i)createprocess'
+  reason: WMI provider created a new process (WMI-based process execution)
+  references:
+    - https://attack.mitre.org/techniques/T1047/

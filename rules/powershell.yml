@@ -1,0 +1,30 @@
+- id: RULE-PS-001
+  title: PowerShell encoded command
+  attack: T1059.001
+  severity: high
+  applies_to_process:
+    - powershell.exe
+    - pwsh.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)-enc(odedcommand)?\s+[A-Za-z0-9+/=]{20,}'
+      - command_line_regex: '(?i)-e\s+[A-Za-z0-9+/=]{20,}'
+  reason: PowerShell used with an encoded command or short encoded argument
+  references:
+    - https://attack.mitre.org/techniques/T1059/001/
+- id: RULE-PS-002
+  title: PowerShell remote script download or execution
+  attack: T1059.001
+  severity: high
+  applies_to_process:
+    - powershell.exe
+    - pwsh.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)downloadstring'
+      - command_line_regex: '(?i)invoke-webrequest|\biwr\b|\bcurl\b|\bwget\b'
+      - command_line_regex: '(?i)invoke-expression|\biex\b'
+      - command_line_regex: '(?i)new-object\s+system\+net\+webclient'
+  reason: PowerShell fetched or invoked a remote or script payload
+  references:
+    - https://attack.mitre.org/techniques/T1059/001/

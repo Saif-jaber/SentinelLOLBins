@@ -1,0 +1,12 @@
+- id: RULE-CMSTP-001
+  title: CMSTP signed installer proxy execution
+  attack: T1218.003
+  severity: high
+  applies_to_process:
+    - cmstp.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)/i\s+\S+\.inf'
+  reason: CMSTP used to install a signed installer package (proxy execution)
+  references:
+    - https://attack.mitre.org/techniques/T1218/003/

@@ -1,0 +1,13 @@
+- id: RULE-BITSADMIN-001
+  title: BITSAdmin payload download
+  attack: T1197
+  severity: high
+  applies_to_process:
+    - bitsadmin.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)/add\b'
+      - command_line_regex: '(?i)/transfer'
+  reason: BITSAdmin created or transferred a download job (payload staging)
+  references:
+    - https://attack.mitre.org/techniques/T1197/

@@ -1,0 +1,13 @@
+- id: RULE-MSHTA-001
+  title: mshta script execution
+  attack: T1218.005
+  severity: high
+  applies_to_process:
+    - mshta.exe
+  conditions:
+    any:
+      - command_line_regex: '(?i)-File\s+[^\s]+'
+      - command_line_regex: '(?i)http[s]?://'
+  reason: mshta launched a script or hosted content
+  references:
+    - https://attack.mitre.org/techniques/T1218/005/
