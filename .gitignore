@@ -30,9 +30,9 @@ secrets/
 
 # Datasets (raw data is not committed)
 data/raw/
-data/processed/
+data/processed/securebert/
+data/processed/securebert_debiased/
 *.csv
-*.parquet
 *.feather
 *.arff
 
