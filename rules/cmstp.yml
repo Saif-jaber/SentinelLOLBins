@@ -6,7 +6,9 @@
     - cmstp.exe
   conditions:
     any:
-      - command_line_regex: '(?i)/i\s+\S+\.inf'
+      - command_line_regex: '(?i)\.inf\b'
+      - command_line_regex: '(?i)ms-appinstaller:'
+      - command_line_regex: '(?i)https?://'
   reason: CMSTP used to install a signed installer package (proxy execution)
   references:
     - https://attack.mitre.org/techniques/T1218/003/

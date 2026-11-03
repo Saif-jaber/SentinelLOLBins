@@ -7,6 +7,9 @@
   conditions:
     any:
       - command_line_regex: '(?i)\.(js|vbs|jscript|wscript|wsf|vbe|hta|ps1)\b'
+      - command_line_regex: '(?i)scrobj\.dll'
+      - command_line_regex: '(?i)/i:(https?://|\\\\)'
+      - command_line_regex: '(?i)https?://'
   reason: Regsvr32 used to execute a scriptlet or script-backed binary
   references:
     - https://attack.mitre.org/techniques/T1218/010/

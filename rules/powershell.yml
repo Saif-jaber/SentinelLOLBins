@@ -1,15 +1,12 @@
 - id: RULE-PS-001
-  title: PowerShell encoded command
+  title: PowerShell encoded command (any host)
   attack: T1059.001
   severity: high
-  applies_to_process:
-    - powershell.exe
-    - pwsh.exe
   conditions:
     any:
       - command_line_regex: '(?i)-enc(odedcommand)?\s+[A-Za-z0-9+/=]{20,}'
       - command_line_regex: '(?i)-e\s+[A-Za-z0-9+/=]{20,}'
-  reason: PowerShell used with an encoded command or short encoded argument
+  reason: Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process
   references:
     - https://attack.mitre.org/techniques/T1059/001/
 - id: RULE-PS-002

@@ -122,13 +122,17 @@ def main() -> None:
             rid = str(r["record_id"])
             for rule_id in filter(None, str(r["matched_rule_ids"]).split(";")):
                 rule = rules_index.get(rule_id, {})
+                # per-pair values must describe the MATCHED rule, not the event
+                rule_reason = str(rule.get("reason") or rule_id)
+                rule_attack = str(rule.get("attack") or "")
+                rule_severity = str(rule.get("severity") or "")
                 long_rows.append({
                     "record_id": rid,
                     "rule_id": rule_id,
                     "matched": 1,
-                    "reason": str(r["reasons"]).split(";")[0] if str(r["reasons"]) else "",
-                    "attack_id": str(r["attack_ids"]).split(";")[0] if str(r["attack_ids"]) else str(rule.get("attack") or ""),
-                    "severity": str(r["severity_max"]) if r["severity_max"] is not None else str(rule.get("severity") or ""),
+                    "reason": rule_reason,
+                    "attack_id": rule_attack,
+                    "severity": rule_severity,
                 })
 
     summary = pd.DataFrame(summary_rows, columns=SUMMARY_COLUMNS)
@@ -143,7 +147,8 @@ def main() -> None:
     ])
     benign_heavy.to_csv(os.path.join(args.out_dir, "rules_benign_heavy.csv"), index=False)
 
-    print(f"wrote {args.out_dir}/rules_{name}.csv")
+    for name in args.datasets:
+        print(f"wrote {args.out_dir}/rules_{name}.csv")
     print(f"wrote {args.out_dir}/rules_long.csv")
     print(f"wrote {args.out_dir}/rules_summary.csv")
     print(f"wrote {args.out_dir}/rules_benign_heavy.csv")

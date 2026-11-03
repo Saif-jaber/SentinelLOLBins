@@ -9,6 +9,7 @@
       - command_line_regex: '(?i)\.msbuild\.xml'
       - command_line_regex: '(?i)\.proj\b'
       - command_line_regex: '(?i)\.targets\b'
+      - command_line_regex: '(?i)\.xml\b'
       - command_line_regex: '(?i)customtaskfactory'
   reason: MSBuild executed a build project or inline task
   references:

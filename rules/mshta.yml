@@ -8,6 +8,8 @@
     any:
       - command_line_regex: '(?i)-File\s+[^\s]+'
       - command_line_regex: '(?i)http[s]?://'
-  reason: mshta launched a script or hosted content
+      - command_line_regex: '(?i)\.hta\b'
+      - command_line_regex: '(?i)vbscript:|javascript:'
+  reason: mshta launched a script, a local .hta, or hosted content
   references:
     - https://attack.mitre.org/techniques/T1218/005/

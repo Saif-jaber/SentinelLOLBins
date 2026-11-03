@@ -1,0 +1,3 @@
+dataset,model,threshold,precision,recall,f1,fpr,tp,fp,fn,tn,notes
+original,Rules-only (deterministic),n/a,0.995,0.034,0.065,0.0001,217,1,6211,7600,"Event-level: flagged iff any rule matched; hand-written rules, not tuned on test."
+original,Rules-only (deterministic),n/a,1.0,0.039,0.076,,320,0,7802,0,Holdout is malicious-only; FPR not defined. Rules caught 320 of 8122 malicious holdout events.

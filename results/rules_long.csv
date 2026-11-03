@@ -1,0 +1,569 @@
+record_id,rule_id,matched,reason,attack_id,severity
+59218a559e55a4c3,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+38420d0428151350,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+c6d338892bb36e4a,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+a90f255385308326,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+851ef145ee33d90f,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+26f0faf5630a538d,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+d33d8b2e59600eb6,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+b9ebf7392aaf89e1,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+6e12a1fa720da90b,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+d1208b41ae28f606,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+82bb75fc5f74e7c2,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+dfab48f55d5451be,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+ebd6a89cdd03fc74,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+69474bd9c06abb98,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+0a24fd3f1e8f87c9,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+1b1832384d5fc423,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+a27b98f5a2cb1cdf,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+532cb5e6c8d45929,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e70fe0191fba30b3,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+e70fe0191fba30b3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+9d7cf9ce3458fdec,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+228aaf5cdafce8eb,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+82a4c0cf41dbcbf2,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+94609c50c8e25bfa,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+e9bdbe744a4d0e10,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+168a5b576443b189,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+b1e8ce4d0571b6c5,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+401d80521c15b6ad,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+35a1d7ed7acec0ec,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+c26331138eb53e4a,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+96022433ffa726ec,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+18ef41ffffda0fc3,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+54c39433f69cf1e4,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+cd95c1b2649a1397,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+5a93239701bac9ea,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+de55c16aa7d68b99,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+fe7ba367b0542431,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+d51a4626cb0a571e,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+8081e4f2940a87b3,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+c7c0eb804068f76f,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+cd9def01984cf896,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+77fe81de78423104,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+bc41d10238d6869c,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e27c883ca3c118b5,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+4facef0f57d532a7,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+11b1cd0e4a5edf4f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+b28444efbec19c52,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+2d16c9979c52049f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+666f2c7e2a63cb6c,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+f58469d3bc50b9c9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+a23abf854776c096,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+5e946abef2fe7492,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+c4f22262f4bb8dd5,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+10c4fbf387b44923,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+79018591709185c8,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+3a58689337d8a96e,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+a7dad0fc515d193b,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+fa69281edd228ce4,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e5ddae5ca72b7a1f,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+f036aaaeed6f8906,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+ba79b4ff128da0e2,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+edffa555d4a70bfb,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+59334b4288c745b9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+b0e89f6e21dc1396,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+646915301836ac0f,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+c6644050488a2c01,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1b3100e25fcde8d9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e460c19d1db96653,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+73ca54f6c9df5bb9,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+ec78c6ddbd4d7dc5,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+c0e90b958683cab1,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+6e008a5a4ba40b1d,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+63ec0620d7f22576,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+8595e01f6b97a7ca,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1f284f9c7d3100f3,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+1f284f9c7d3100f3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+96dd217b620375ea,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+b04dfa6ea537f552,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+0e9dd147c558389e,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+125fa9e78a94ca40,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+c4c4e7dab0702887,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a9912949d28a8e91,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+296c4658e13c72d8,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+413301afb837d33d,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+670c9938238b89f4,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+670c9938238b89f4,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+534f46267ae98a08,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+362a8a098a6e658a,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+24f7a60dfabc283a,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+4dba08363e86eb4d,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+112cac0553db4d63,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+ec1719b029ef681e,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+3a4fe7512f8d9cb5,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+040b353e09941318,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+baba15f70a7b2597,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+28add9c8dbdf1006,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+44a9f281aca16aba,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+3b005b99f59a2a9d,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+8d530f55a3c8a094,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+45912062f35fb9e9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+f7cc1b479757a81c,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+0d5ed8364cf74c86,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+3f8ac4281b4d5753,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+56779afdee0b7e1b,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+9ff77a982970239c,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+3b7118e70cb7f7ec,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+1310726ca85562c9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+f2c818d795f4e4d3,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+18fdf1f6327db120,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+d48fd5986499f75d,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+1a12b9e1ea9b9b0e,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+ae4ea723e3f97a2c,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+4c0ca2afcd526af8,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+864172d9e5cc6b71,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+802b426e3d47f6ec,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1099a2afa7b0fbba,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+6c4768b4f18f3c19,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+351c2ab52434622b,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+ff81c433588cf244,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+8a84c46cf1079b15,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e981963815b861f2,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+2881f117011550b7,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+d039c62ddd343a4d,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1bd6edd87d2fffb4,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+fc170eaa72ba34a1,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+f197e48e3a670957,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a46424f883b4ad8a,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+baa7a77c2635b812,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+7dd0dad68355b24f,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+3425cdd64bd5a8d0,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+6d942cd91f7b15c1,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+86b567d616f529c5,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+f80e233ba2c1552e,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+d2d262f16a590ee0,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+faa89fb70b7e2dfb,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+13561f7a735933ba,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+edcca7c90d084e33,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+36bc56100c2168c2,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+226b6409863e2f94,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+a1e2f6d6c5f7148d,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+f8dc7afe1b975361,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+09dfad704b702056,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+ee7ad52a7690054a,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+0f4cce9d9c2c2157,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a237180adbd8b5ea,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+b9f1a56788d15f13,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+15af485677f12310,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+46c0f46116efb353,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+f57cac90a5985ab5,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+d9803d52ed040326,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+0f19288dfd3ee70d,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+073fe0ff85b247a9,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+073fe0ff85b247a9,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+c40eb6730fb0dbfe,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+ff5a59bc22260306,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+997eff77d771183d,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+1c7be6552f58c080,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+65887bdc04b98533,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+e7b21e5cc0f8a721,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+2d0a05e823370d9d,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+9c63a23070204df2,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+0734c9728b0a79dd,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+4682e175e7bf2298,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+b6848c804dd8060f,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+49058a0d7fa05da4,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+26eb4e382a162569,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+c024c6b446a1b467,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+bd15d0a9b22eadb2,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+7489142d7d5f2ed5,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+572b5444ae53ad5f,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+2a977b609d443be0,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+49fb7982441d4e78,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+289bda6b59f93595,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+0a7b681ae325ce8e,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+54060b69c2b929f5,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+954f98fc7fcba257,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+aa432b4b9ab004d6,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+a2cb9d4b4f78cce4,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+7bc926b97945e704,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+49098c7eb01c2423,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+70c6d44d14c70d98,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+ada98d9c5d364545,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+aeb0a2d4bad5bc68,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+4800fa2ac0cf7c30,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e84ab36ddc073b44,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+a35d09cad411504e,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+741bc332be18079a,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+9fd4c4196a43d104,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+94f2737cf043d028,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1c69838a161c9340,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+4cd1e876a41663f0,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+7f05d33a77ee385b,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+9b528dda5e612e25,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+a56f0c5661698783,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+e4df5f2e6f5966b5,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+440f353d1739f375,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+d64cb8a040b9f0ba,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+2cbaa81dd39fd3d7,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+d424d5d0beae0184,RULE-RUNDLL32-001,1,"rundll32 executed by a document/browser parent, via a script protocol, or from a UNC-hosted DLL",T1218.011,medium
+a2bd1b0a759a98d4,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+d85595b5f6a3da69,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+2e831e5e760b0d62,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+f4b5075f1fe4ea6a,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+d23d5d5a1194832f,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+65b1f12cd51fb4b6,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+0413bb72c947bd17,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+86c64cd9b055d5cb,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+d8da0e5409687e23,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+0a8fc7bf79f41935,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+78bca283b875f8c3,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+09f133866afe7c8f,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+33bc77871fade2b9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+9b5e8f44d581bd4b,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+6db97ed310b2ce84,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+2a189b320b0cf2b4,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+933406648fd8f2a9,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+7e539e50999780e9,RULE-CERTUTIL-001,1,"Certutil used for download, fetch or payload decode",T1105,high
+1ad6df86d80230b1,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+1ad6df86d80230b1,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+1d0edfeca8276168,RULE-MSBUILD-001,1,MSBuild executed a build project or inline task,T1059,high
+27f2912e2162b12a,RULE-CMSTP-001,1,CMSTP used to install a signed installer package (proxy execution),T1218.003,high
+28f62f5ec64b8f6f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+b347580b319afbba,RULE-PS-002,1,PowerShell fetched or invoked a remote or script payload,T1059.001,high
+f01080e703599954,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a4c6149d4ab7a85b,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4075a7d5ac5b0c42,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+72ae620878310476,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+e9bf6d64b597ed5a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8b92b36634d6e423,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+fe29dbfb1a0f297a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+adf1c2a52153f7dd,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+350a6454524a7085,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9d17ec39cb81fdc4,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+de9d1c8f571d9add,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+da292fa6909e6fb0,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e962b93ceceef176,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a1056858fb8f0491,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+dcc43c9ea779ac95,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+4ea6010d29432793,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+f9be6c7d863f44d2,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+06a82e2a37c9579b,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+fec2ee74711fef2b,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+fec2ee74711fef2b,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+12b50372aafde104,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+25e55f6b699fbad6,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0aad40f06ca7bb65,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+581cea222f0a68e1,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+48693e6e5fccf81d,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a06b2ca96e76f497,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+cefe279e6dd4b425,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+98d82bcbf1f2bf53,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4c69c61fe570a293,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+38679224a45e353a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+090c45bd719736ae,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+92f0532461d15b90,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+186d7005065894c0,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a81465d7b357a422,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+cdc781bd956897b7,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a70ab8e929c1ffcd,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+3676eff89ed34ffa,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+948b7d5c0f32142e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4a63037b399e6c57,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b17c61a25b9f08dd,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+e74f14a4652b767c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+9f473041a9a14924,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9931928ffb366ba2,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a7caa2ba1a9b6a95,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a7caa2ba1a9b6a95,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+7b47b254d116e3dc,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e9a6c29cf1b0cf73,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3ec172fe985216be,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+558c6e2d9f8a76e3,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+fb80e3d0e48274d3,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+ffbedff722b82e7b,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+7a0f24142c0a884a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+6a5117ef732e5564,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a60eb609fb0f6cb6,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+85c27e1a1d0a8193,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+cf0eccc3a5f2fd10,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+745900be8a4bad70,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+8c32452c5d4a3d70,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+0ea75efbd276cc92,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+bfe3f68e6f65e9f4,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+9d74bb6cda58f3ca,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0ef0055be0ba2f35,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e1cfd4b7fdf35294,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+c4ed8d4d125bccb2,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9d1e4cb93efe6a87,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4b0021b19de526bf,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+00026eb598297add,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+07e16f2fc99ec980,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+c200d90807b30318,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+86daaf396b43c41f,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+98ea65185e1f15e3,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+d83bded5223ef50f,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+a5b26499f3c845a9,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+54de20e9fc43ab3f,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+1fc12cfe4fa10f73,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+d9598b6ad1776d82,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+ee078aad245a020a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c5747cf94c4f7785,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a2ab63560a765b4f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+089f477f59b1e66a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+aebe63d6b138498e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+2c4e5be6bdfee981,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+814d2f83277964ee,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ea1bbd05b3762c25,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+b11ebe9a1d1b4710,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+97630a4500e9729a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+97630a4500e9729a,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a577f7b5e2dc298c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c3c14c02b7648f7c,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+27b624aaab88816f,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+5843497cfac3a850,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+76ed98a4b4beac9c,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+2b10d10fa9117faa,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+2b10d10fa9117faa,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+30f6f46eafc23ca8,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c547d2317ad06c0c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c547d2317ad06c0c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+faa988d460ba59d9,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1c3777a0c687fb3c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1c3777a0c687fb3c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+f56c6cfaf19e8783,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4267cc84e4c41032,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+2f0bf1de801f1f37,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+65f4223444f1e113,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+65f4223444f1e113,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+51ee901f3d0e4365,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+0049ef47dfcd3fc4,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+1754ae8c4f38e5c8,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+809cc5b1758f80bf,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+f0f8b1fb73d9f807,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0697d5f48cc8c714,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+aeb1b2364884068b,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+66dacf02dcb0461e,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+493f088397c15986,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+ddb8a6e04f7de063,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+8a86e0d4d963cf89,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+f2976c9d4a9e9a45,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+daf2e4c3eacefa52,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+daf2e4c3eacefa52,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+409d05b341342a84,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+409d05b341342a84,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+90c8898a917c29a0,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+90c8898a917c29a0,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+9a9c13c8d897800b,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+b4174f61b00f52b5,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c79e6d7631d3d79d,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c749752c31f1b42a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+653d0c3da7829ca3,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a98b71b63ba7da9f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+5f6c335b53cbb2a7,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+bf17d7a437aca86d,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+95ee182b067d11a1,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+dc22d2aea0a1d5c7,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+f60b4d6e6cdd2e6e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+30cacb8309e61c94,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+dad3da5471f2a22f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+711f6bdb274a802d,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+edd7257d32c3eee5,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+96011e2190a5b6dd,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+73e97e77a43aec87,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+071c367dde4351ea,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+071c367dde4351ea,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+88b0b0e42e9647aa,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+41c80ce2dcb667ac,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ca85db26312cb6d5,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e787c925118f4d97,RULE-REGSVR32-001,1,Regsvr32 used to execute a scriptlet or script-backed binary,T1218.010,medium
+30852466b52b0ad9,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+f34766da83f9fbeb,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+eb838848b1e8413a,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+cde4d292d577b912,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+69dbe08ed3966bd9,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+b2d560d2ab4fccee,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+53a8acd76d0876c2,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+ded8fd7694d134c6,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4c56bf5eb8cd9d53,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+d490282e6788cd78,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4de5b81339f7064d,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+aab485e79b77a0fb,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+567a6d859edad385,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+1badb6a24476b05d,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+2f0feec20c236113,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+6b371612340d4fc1,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e12a514d3533e25a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+58f69afb78c41520,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+258b3bc327d232a6,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+258b3bc327d232a6,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+970e9b60ed01bfdf,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+effd6b7b62fa9fcb,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+db04b1dba8339495,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+59b17166225d2793,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1f311c12517f2365,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+8d2be5cdd6ddacbd,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+4c0f9496cc2c6c8c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+070879504f8f8036,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+df2d2a37f8f1813c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+288793b091ca6022,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+984d1ab568a8c570,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9cb1f9e6e2f4941e,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ef102cd8567c6756,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+219c6ad72fed9b6f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+219c6ad72fed9b6f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+b94c536bbb311356,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+02956b0c944420dc,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a6a34a144de86793,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+7058e8fe01ddf89f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b8e11c82c2386d17,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3d029b3329011921,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9220b31822e85007,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+70aa74ec72f23a7d,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+2a74c4339766c7ed,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9f28504cb9bde99a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+d328263dfa8521e6,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+204c3461447571b7,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+98587c44f9646fd9,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+e6e03b671c0bbabb,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1855cae517a4c48e,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4d03c695ddf80fb3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+45f61da471d8d8e2,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+f0c3653c061ffd09,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+f995e332f86cc06e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+89a9746ca78a5f1e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+45e3e636727ece6c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3fa8cf24065c2652,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3fa8cf24065c2652,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+3d68dd789906f934,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1f3f22a4c758cd7a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+c86b1fbf25a146c9,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4629c5be17cdc440,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+d88ae6ccc8e4b502,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+47fc3b6fb4c6b9fa,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+0b690f6a7d3ebf21,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+a842326a45ea4640,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+c3f4eeded1dc05e6,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+ecfc4bd7957167a5,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+adeada5defd52adc,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+88c37fde5cec2f06,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+44a1db2790a1a6df,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1c7fb044ab529649,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+71d8fb591dce735f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b1f465da512672dc,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+81bc3c0eea5a9027,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+a4c319f18a58e430,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a4c319f18a58e430,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+0962dc5517e3bc2b,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+1c2ad634cf60f3fa,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+8ab156f3b013d3e1,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4adce406351961b8,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+ea216ed279da2513,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+7a04fa7d657ecaaa,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+7a13f6e78cffa44d,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+e51b0c2ac4e097b3,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0870fa30f3faab74,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+ad893666d9eb725a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+33250edefef3e35a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ca6489f74785d070,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+07c2c8a73d5f8a78,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+07c2c8a73d5f8a78,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+eb56453ab275bab6,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1d5ea3847a9003fb,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+79ff8c64631b9cf3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+163de930ce4128c6,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c99a6f300278e494,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+f0b1e685e8a98339,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+fe112ae41041e2c5,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8134a5ee675b9f52,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+422b7040d63448e3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+0ccf830de42f3e8c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0ccf830de42f3e8c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+41ae186aa22fd97e,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+f255f09a2c5b6ef7,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+32aff70d874a283a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+70394187ed37713c,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+a8c81b8466da536f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8636b3e2373de999,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+e2380914d31fbf10,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+bb56b6ca330b980a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c1bb37019a994818,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3fcf13eedce94f1b,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+f2f202bff17b6d60,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+200a99647b50dfb6,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+ecf3d4d6796ee312,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+211e93aea2ed5d58,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+82e2fd83feec79d1,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ffdd8bd0fcfd8ad3,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+f7447059fee79942,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+5753dc40b6e7243c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+5753dc40b6e7243c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+0a762227c62ca2d8,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+21ac32199bff7d35,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+21ac32199bff7d35,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+2e240e5526d1a255,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+2e240e5526d1a255,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+ec7db1a2e6d5a201,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+da953a220a88c1ac,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+fd0fe9221c1c153d,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+6fe3d61b24453f10,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+3a209762a400fc44,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8c98b8e38e588438,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+7b5c5a1e5abdf9f2,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+47eca3c03ad7c17e,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+547b4ef7fb2cd700,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+92e98df8cfa8c2c1,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+47f23f4b19b358bf,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+47f23f4b19b358bf,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+150faa22563447fe,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0322920fead69687,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+fefcfff8c7ac89c3,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+9ba3bcc8727efa9f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+6c59232cf6b63f05,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8680bbce1c3e3df4,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+d49c40ecc73597b2,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+03ab1e9a5e81d373,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4d5e8396866a90df,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+a75a21ce597e6f1f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+789b66f9c3aad96b,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+56a4f7be7f1bb439,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+112b02dde92ab390,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+4455ede3bef61efc,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+8684c254e486995b,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b801d75b25c90993,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+7d5fb1153fa60c4c,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+24e7e3156bb9702b,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+1721514ccc870b63,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+39b83525c826d4af,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+ef664eb4786b968f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ef664eb4786b968f,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+1b4ec1aa965ca93d,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+5aec22e50e11176a,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+d322254baf252770,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+b81f99567ccf5a47,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+53c7454d4c7fbe03,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+9c4396074dc0806c,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+8a38dea25110f6e1,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+805f1ad4e962490a,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+247c1344cba4859e,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+5e6f354268cc840e,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+43b0f9b494e15364,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b8e115d47bb8beec,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+b8e115d47bb8beec,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+d3f7f075f0a0bbf1,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+39c785acc485921f,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+aef27e42db3bc191,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+4cd9753f061c1585,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+02f89c924388c38e,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+17451861466d2b34,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+17451861466d2b34,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+094625b1ddd4eb82,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+c0b1c95097a91def,RULE-PSEXEC-001,1,PsExec-style remote execution via UNC path or service control,T1021.002,high
+bc5d2808d239e28f,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+fc433409ec2cc090,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e7ae137a596ba20c,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+be6a8cb4cbf54fb7,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0880890a5377d106,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+79f0973f1414a3d5,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+ccf1a4f0c65b2271,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+5d151adf88652553,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+3871389ac54ddee9,RULE-BITSADMIN-001,1,BITSAdmin created or transferred a download job (payload staging),T1197,high
+cc646cef961a7d08,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e617585df3289fe2,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e617585df3289fe2,RULE-PS-001,1,"Command line carries a PowerShell encoded payload (base64, often UTF-16LE), on any host process",T1059.001,high
+a723610fb254993c,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+87a86e05cee3c122,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+e6511873455d79e1,RULE-WMI-001,1,WMI provider created a new process (WMI-based process execution),T1047,high
+606c7c4ab93a5f94,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high
+0cb9428e31fb8f43,RULE-MSHTA-001,1,"mshta launched a script, a local .hta, or hosted content",T1218.005,high

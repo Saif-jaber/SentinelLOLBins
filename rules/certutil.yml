@@ -9,6 +9,7 @@
       - command_line_regex: '(?i)-urlcache'
       - command_line_regex: '(?i)https?://'
       - command_line_regex: '(?i)-decode'
+      - command_line_regex: '(?i)-encode\b'
   reason: Certutil used for download, fetch or payload decode
   references:
     - https://attack.mitre.org/techniques/T1105/
