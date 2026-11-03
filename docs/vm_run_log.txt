@@ -1,0 +1,38 @@
+SENTINEL_LOLBINS - VM VALIDATION RUN LOG
+=======================================
+Fill this in during/after the collection session. Keep raw Sysmon exports and
+CSVs in data/raw/vm/ (git-ignored); record paths and findings here.
+
+VM identity and environment
+  VM name / ID:
+  Hypervisor:
+  Windows build:
+  Sysmon version:
+  Sysmon config file + SHA-256:
+  VM clock set to UTC (yes/no, verified how):
+  Snapshot name taken before changes:
+  Snapshot timestamp (UTC):
+
+Network state
+  During benign runs:
+  During attack runs:
+
+Scenarios run (one line each)
+  scenario_id | expected_label | technique | result | notes
+  e.g. ATK-001    | 1              | T1059.001 | captured | 2 runs, both in sysmon_events.csv
+  BEN-001         | 0              | none      | captured | whoami /claims
+
+What failed or was skipped (and why)
+  -
+
+Missing fields observed in my export (adapter report cross-check)
+  See docs/vm_missing_fields.txt (paste summary here if helpful).
+
+Rollback
+  Rolled back to snapshot:
+  Rollback timestamp (UTC):
+  Verified by (how):
+
+Sign-off
+  Operator:
+  Date (UTC):
