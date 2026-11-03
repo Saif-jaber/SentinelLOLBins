@@ -1,0 +1,47 @@
+{
+  "generated_by": "src/hybrid_rules.py",
+  "dataset": "original",
+  "selected_base_model": "fusion",
+  "selected_policy": "override_high",
+  "selection_rule": "validation only: F1, then recall, then lower FPR; exact ties prefer override_high (keeps high-severity rule evidence for analyst triage at zero measured validation cost)",
+  "frozen_thresholds": {
+    "xgboost": 0.55,
+    "fusion": 0.5
+  },
+  "fusion_weights": {
+    "w_xgb": 0.4,
+    "w_encoder": 0.6
+  },
+  "validation": {
+    "xgboost": {
+      "policy": "override_high",
+      "val": {
+        "precision": 0.9988105857865002,
+        "recall": 0.999702380952381,
+        "f1": 0.9992562843968467,
+        "fpr": 0.0010715242432360033,
+        "tp": 6718,
+        "fp": 8,
+        "fn": 2,
+        "tn": 7458
+      }
+    },
+    "fusion": {
+      "policy": "override_high",
+      "val": {
+        "precision": 0.999553770638108,
+        "recall": 1.0,
+        "f1": 0.999776835527784,
+        "fpr": 0.0004018215912135012,
+        "tp": 6720,
+        "fp": 3,
+        "fn": 0,
+        "tn": 7463
+      }
+    }
+  },
+  "feature_level_not_used": "decision-level chosen: validation had no recall headroom for a meta-model to learn from, and feature-level fusion would need out-of-fold base scores; the decision policy is auditable",
+  "selection_uses_validation_only": true,
+  "reported_test_and_holdout_scores": "from this script after the policy was frozen; rules, base thresholds and policy family were not tuned on test/holdout",
+  "seed": 42
+}

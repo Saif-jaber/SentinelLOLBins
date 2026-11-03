@@ -62,7 +62,7 @@ These are planned activities. Results will be documented after implementation an
 
 Planned metrics include precision, recall, F1-score, false-positive rate, confusion matrices, precision-recall curves, and inference latency where applicable.
 
-Evaluation will consider class imbalance, benign-heavy test data, possible dataset leakage, and performance on withheld scenarios. No performance results are claimed at the initialisation stage.
+Evaluation considers class imbalance, benign-heavy test data, possible dataset leakage, and performance on withheld scenarios. Measured results are consolidated in `results/master_results.csv` and `results/master_results.json`.
 
 ## 7. Ethical and Legal Considerations
 
@@ -90,7 +90,15 @@ GitHub Issues or Projects will be used to track tasks, assign owners, record pro
 
 **Deliverable 1:** Introduction, literature review, and methodology planning.
 
-The repository is being initialised. Dataset auditing, implementation, model training, testing, and dashboard integration are planned future activities and will not be reported as completed until verified.
+Dataset audit, 100k sample, group-aware splits, XGBoost, SecureBERT 2.0, fusion,
+E3 ablation, E4 held-out-technique evaluation, benign-heavy testing and error
+analysis are complete. The deterministic rules baseline (E1) and the
+hybrid-with-rules comparison (E5) are also complete; see `results/master_results.csv`.
+
+**VM validation is not a result.** `data/processed/vm_adapted.parquet` does not
+exist, instructor authorisation is still pending, and `src/score_vm.py` refuses
+to produce numbers without real telemetry. Report this as a limitation, not as
+completed external validation. Dashboard/API integration remains future work.
 
 ## 11. References and Resources
 

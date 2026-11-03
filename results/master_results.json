@@ -1,20 +1,18 @@
 {
   "generated_by": "src/build_master_table.py",
   "holdout_is_malicious_only": true,
-  "e1_status": "pending (rules/ empty)",
+  "e1_status": "complete (measured on test and holdout)",
+  "hybrid_rules_status": "complete (validation-selected decision policy, scored once on test/holdout)",
   "sources": [
-    "",
-    "1:100 prevalence; 0.0 false alarms per 10k benign events",
-    "1:100 prevalence; 11.8 false alarms per 10k benign events",
-    "1:100 prevalence; 13.2 false alarms per 10k benign events",
-    "1:100 prevalence; 2.6 false alarms per 10k benign events",
-    "8033/8122 held-out attacks caught; benign FPR 0.0012",
+    "benign_heavy_results.csv",
     "debiased_fusion_results.csv",
     "e2_comparison.csv",
     "e2_comparison_debiased.csv",
+    "e3_ablation.csv",
+    "e4_holdout.csv",
     "fusion_results.csv",
-    "mean 0.0005 ms, median 0.0005 ms, p95 0.0005 ms over 14029 events",
-    "mean 18.6200 ms, median 18.6360 ms, p95 19.5040 ms over 200 events",
-    "rules/ (pending)"
+    "hybrid_rules_results.csv",
+    "latency.csv",
+    "rules_summary.csv"
   ]
 }

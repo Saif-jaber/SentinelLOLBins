@@ -35,6 +35,8 @@ data/processed/securebert_debiased/
 *.csv
 *.feather
 *.arff
+# Keep curated result tables tracked (raw data above stays ignored)
+!results/*.csv
 
 # Model weights and artifacts
 *.pkl

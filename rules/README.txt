@@ -251,7 +251,9 @@ Changes made and why:
    rule (previously event-level first/max values - a latent bug, no affected
    rows existed).
 
-Results before -> after (event level, any rule match = flagged):
+Results before -> after (event level, any rule match = flagged).
+QUOTE ONLY THE "AFTER" VALUES. The "before" column is obsolete intermediate
+output (old recall 0.017 / 110 caught) and must not appear in the report.
   TEST    precision 0.991 -> 0.995 | recall 0.017 -> 0.034 | tp 110 -> 217 |
           fp 1 -> 1 (unchanged)    | FPR 0.0001 -> 0.0001
   HOLDOUT recall 151/8122 -> 320/8122 | precision 1.0 (unchanged) | fp 0

@@ -2,7 +2,7 @@
 
 **Owner:** Haitham Wail Omer (Rules & Windows validation)
 **Implements:** Deliverable-1 methodology §3.6 (independent Sysmon validation), Experiment E4 external check
-**Status:** Adapter built and tested. **VM execution NOT done. Instructor authorisation NOT yet given.**
+**Status:** Adapter and scoring runner built and tested on synthetic input. **VM execution NOT done. Instructor authorisation NOT yet given. No VM results exist.**
 
 This guide covers everything from an empty VM to handing files to Saif for scoring.
 Read `docs/NOTES_TO_HAITHAM_SYSMON.txt` first — it defines the required output
@@ -124,6 +124,20 @@ are fine (OneHotEncoder `handle_unknown="ignore"`). He reports:
 - scenario-level recall on attack runs; FPR on benign runs; list of misses
   with raw command lines → `results/vm_*.csv`.
 
+The scoring runner is committed and data-blocked: it refuses to run unless the
+adapted file exists, so no VM numbers can appear without a genuine collection.
+
+```powershell
+python src/score_vm.py `
+  --adapted data/processed/vm_adapted.parquet `
+  --out-dir results
+```
+
+It uses the frozen XGBoost at the validation-selected threshold 0.55, adds the
+deterministic high-severity rule override as an external hybrid check, and writes
+`results/vm_predictions.csv`, `results/vm_scenario_summary.csv` and
+`results/vm_summary.json` (including a disclaimer field).
+
 ## 6. Rollback and honesty
 
 - Roll the VM back to `pre-sysmon-validation` when collection is done.
@@ -131,6 +145,19 @@ are fine (OneHotEncoder `handle_unknown="ignore"`). He reports:
   one VM**, and is not a real-world estimate. No claims of generalisation.
 - If a scenario could not run (tooling unavailable, unsafe, out of scope),
   record it as "not feasible" with the reason in the run log.
+
+### Report wording (use this, do not upgrade the claim)
+
+> The VM check was limited to the scenarios actually run on one isolated,
+> snapshot-backed Windows VM. It is an external sanity check of transfer to raw
+> Sysmon Event ID 1 telemetry, not an estimate of real-world detection
+> performance, and it must not be generalised to enterprise deployment.
+
+If `docs/vm_authorisation.md` is still marked **NOT AUTHORISED**, the VM
+validation did not happen. In that case it belongs in **Limitations and future
+work**, not in the results section: state that no independent Windows telemetry
+was collected because instructor authorisation was not obtained, and that the
+adapter and scoring runner are ready for a future authorised run.
 
 ## 7. Files this workstream owns
 

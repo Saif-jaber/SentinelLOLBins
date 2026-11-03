@@ -1,0 +1,5 @@
+metric,point,ci_low,ci_high,n_boot,unit
+precision,0.998,0.996,0.999,1000,command template (grouped)
+recall,1.0,1.0,1.0,1000,command template (grouped)
+f1,0.999,0.998,1.0,1000,command template (grouped)
+fpr,0.002,0.001,0.003,1000,command template (grouped)

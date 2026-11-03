@@ -1,0 +1,24 @@
+experiment,dataset,model,n_features,w_xgb,threshold,precision,recall,f1,fpr,holdout_recall,notes,source
+E1_rules_only,original,Deterministic rules (Haitham),,,n/a,0.995,0.034,0.065,0.0001,0.039,"Event-level: flagged iff any rule matched; hand-written rules, not tuned on test; benign-heavy 1.3 FP per 10k benign events.",rules_summary.csv
+E2_model_comparison,original,XGBoost (full context),108.0,1.0,0.55,0.999,0.999,0.999,0.0012,0.989,,e2_comparison.csv
+E2_model_comparison,debiased,XGBoost (full context),108.0,1.0,0.55,0.999,1.0,0.999,0.0014,0.985,,e2_comparison_debiased.csv
+E2_model_comparison,original,SecureBERT2.0 frozen + logistic,768.0,0.0,0.2,0.998,1.0,0.999,0.0017,0.998,no process context; command text only,e2_comparison.csv
+E2_model_comparison,debiased,SecureBERT2.0 frozen + logistic,768.0,0.0,0.35,0.999,0.999,0.999,0.0008,0.998,no process context; command text only,e2_comparison_debiased.csv
+E2_fusion,original,Fusion (weighted XGB + SecureBERT),876.0,0.4,0.5,0.999,1.0,0.999,0.0011,0.997,single-arm thresholds and weights in fusion_config.json,fusion_results.csv
+E2_fusion,debiased,Fusion (weighted XGB + SecureBERT),876.0,0.8,0.7,0.999,0.999,0.999,0.0014,0.983,single-arm thresholds and weights in fusion_config.json,debiased_fusion_results.csv
+E3_feature_ablation,original,name only,39.0,1.0,0.35,0.97,0.938,0.954,0.0245,0.957,,e3_ablation.csv
+E3_feature_ablation,original,name + parent,53.0,1.0,0.3,0.971,0.965,0.968,0.0245,0.957,,e3_ablation.csv
+E3_feature_ablation,original,name + parent + cmd,91.0,1.0,0.25,0.997,1.0,0.998,0.0024,0.982,,e3_ablation.csv
+E3_feature_ablation,original,full context,108.0,1.0,0.55,0.999,0.999,0.999,0.0012,0.989,,e3_ablation.csv
+E3_feature_ablation,original,full without process name,69.0,1.0,0.5,0.999,0.999,0.999,0.0012,0.958,,e3_ablation.csv
+E4_heldout_techniques,original,XGBoost (full context),108.0,1.0,0.55,,,,,0.989,8033/8122 held-out attacks caught; benign FPR 0.0012,e4_holdout.csv
+Robustness_benign_heavy,original,XGBoost (full context),108.0,1.0,0.5,0.884,1.0,0.938,0.0013,,1:100 prevalence; 13.2 false alarms per 10k benign events,benign_heavy_results.csv
+Robustness_benign_heavy,original,XGBoost (full context),108.0,1.0,0.55,0.894,1.0,0.944,0.0012,,1:100 prevalence; 11.8 false alarms per 10k benign events,benign_heavy_results.csv
+Robustness_benign_heavy,original,XGBoost (full context),108.0,1.0,0.9,0.974,0.987,0.98,0.0003,,1:100 prevalence; 2.6 false alarms per 10k benign events,benign_heavy_results.csv
+Robustness_benign_heavy,original,XGBoost (full context),108.0,1.0,0.99,1.0,0.921,0.959,0.0,,1:100 prevalence; 0.0 false alarms per 10k benign events,benign_heavy_results.csv
+Ops_latency,original,single_event (preprocess + predict),,,,,,,,,"mean 18.6200 ms, median 18.6360 ms, p95 19.5040 ms over 200 events",latency.csv
+Ops_latency,original,batch per-event (predict only),,,,,,,,,"mean 0.0005 ms, median 0.0005 ms, p95 0.0005 ms over 14029 events",latency.csv
+E5_hybrid_rules,original,Fusion (XGB + SecureBERT) (no rules),876.0,0.4,0.5,0.9988,0.9998,0.9993,0.00105,0.997,ablation: 8098/8122 held-out attacks caught,hybrid_rules_results.csv
+E5_hybrid_rules,original,Fusion (XGB + SecureBERT) + high-severity rule override,876.0,0.4,0.5,0.9988,0.9998,0.9993,0.00105,0.9977,"selected hybrid: 8103/8122 held-out attacks caught; rules recover 5 of 24 base misses, extra test FP 0",hybrid_rules_results.csv
+E5_hybrid_rules,original,XGBoost (no rules),108.0,1.0,0.55,0.9986,0.9994,0.999,0.00118,0.989,ablation: 8033/8122 held-out attacks caught,hybrid_rules_results.csv
+E5_hybrid_rules,original,XGBoost + high-severity rule override,108.0,1.0,0.55,0.9986,0.9995,0.9991,0.00118,0.9952,"ablation: 8083/8122 held-out attacks caught; rules recover 50 of 89 base misses, extra test FP 0",hybrid_rules_results.csv

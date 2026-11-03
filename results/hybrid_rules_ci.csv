@@ -1,0 +1,5 @@
+metric,point,ci_low,ci_high,n_boot,unit,base_model,policy,split
+precision,0.9988,0.9974,0.9996,1000,command template (grouped),fusion,override_high,test
+recall,0.9998,0.9995,1.0,1000,command template (grouped),fusion,override_high,test
+f1,0.9993,0.9986,0.9997,1000,command template (grouped),fusion,override_high,test
+fpr,0.001,0.0004,0.002,1000,command template (grouped),fusion,override_high,test

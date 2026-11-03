@@ -178,3 +178,42 @@ Blocked by: score_event() contract, Sysmon setup
 - [ ] Alert appears on dashboard as attack runs
 - [ ] VM only, no monitoring outside lab
 - [ ] Confirm scope with instructor
+
+---
+
+## Measured results update (Saif, Data & ML)
+
+**Status:** E1 rules are no longer pending and the hybrid-with-rules comparison is
+done. The numbers below supersede any earlier draft values.
+
+### Stale numbers - do not quote
+
+Earlier drafts / intermediate rule runs used **recall 0.017 / 110 caught**. Those
+are obsolete. The final reviewed rules (frozen before the single test/holdout
+run) give:
+
+| E1 rules-only | Precision | Recall | F1 | FPR | Caught |
+|---|---|---|---|---|---|
+| Test (14,029) | 0.995 | 0.034 | 0.065 | 0.0001 | 217 / 6,428 malicious |
+| Holdout (8,122 malicious-only) | 1.000 | 0.039 | 0.076 | n/a | 320 / 8,122 |
+| Benign-heavy (1:100) | 0.667 | 0.026 | 0.051 | 0.0001 | 1.3 FP per 10k benign |
+
+Source: `results/rules_summary.csv`, `results/rules_benign_heavy.csv`.
+
+### Hybrid-with-rules (RQ3)
+
+Selected on validation only: frozen fusion (XGB + SecureBERT, `w_xgb=0.4`,
+threshold 0.50) plus a high-severity rule override. This changes nothing on the
+balanced test split and recovers 5 of the fusion's 24 withheld-technique misses
+(holdout recall 0.9970 -> 0.9977) with no extra test false positives.
+
+An XGBoost-only ablation shows the same direction more strongly: rules recover
+50 of XGBoost's 89 holdout misses (holdout recall 0.989 -> 0.9952) with no extra
+test false positive.
+
+Honest reading: E1 is a high-precision / low-recall triage and evidence source,
+not a standalone detector. The rule contribution is small and concentrated on
+withheld techniques; do not describe it as a large recall improvement.
+
+Sources: `results/hybrid_rules_results.csv`, `results/hybrid_rules_config.json`,
+`results/master_results.csv`, `results/master_results.json`.

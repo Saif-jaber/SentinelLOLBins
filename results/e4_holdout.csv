@@ -1,0 +1,2 @@
+n_holdout_malicious,holdout_recall,holdout_caught,n_benign,benign_fp,benign_fpr,threshold
+8122,0.989,8033,7601,9,0.0012,0.55

@@ -1,0 +1,4 @@
+dataset,method,w_xgb,threshold,precision,recall,f1,fpr,holdout_recall,holdout_benign_fpr
+debiased,XGBoost only,1.0,0.55,0.999,1.0,0.999,0.0014,0.985,0.0014
+debiased,SecureBERT only (no context),0.0,0.35,0.999,0.999,0.999,0.0008,0.998,0.0008
+debiased,Fusion (XGB + SecureBERT),0.8,0.7,0.999,0.999,0.999,0.0014,0.983,0.0014
