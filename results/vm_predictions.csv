@@ -1,0 +1,33 @@
+record_id,scenario_id,expected_label,technique_expected,process_name,parent_process,CommandLine,xgb_proba,xgb_pred,rule_matched_any,rule_severity_max,rule_ids,hybrid_pred
+vm_9073f71e3991652f,BEN-001,0,none,whoami.exe,powershell.exe,"""C:\Windows\system32\whoami.exe"" /all",0.971665,1,0,,,1
+vm_1757537f334e76ec,BEN-003,0,none,tiworker.exe,-,C:\Windows\winsxs\amd64_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.19041.3745_none_7ded3f327ca60a41\TiWorker.exe -Embedding,0.999989,1,0,,,1
+vm_996b4d7f2bc9be4c,BEN-003,0,none,trustedinstaller.exe,-,C:\Windows\servicing\TrustedInstaller.exe,0.994216,1,0,,,1
+vm_9f24597c70afa20b,BEN-003,0,none,systeminfo.exe,powershell.exe,"""C:\Windows\system32\systeminfo.exe""",0.859266,1,0,,,1
+vm_f469267ab1038207,BEN-004,0,none,tasklist.exe,powershell.exe,"""C:\Windows\system32\tasklist.exe"" /v",0.995554,1,0,,,1
+vm_939d28315e149053,BEN-006,0,none,schtasks.exe,powershell.exe,"""C:\Windows\system32\schtasks.exe"" /query /fo LIST",0.998802,1,0,,,1
+vm_dbb60c4baca0412e,BEN-009,0,none,powershell.exe,powershell.exe,"""C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"" -NoProfile -Command ""Get-Command -Syntax whoami""",0.99997,1,0,,,1
+vm_78219bda606de91f,BEN-010,0,none,bitsadmin.exe,powershell.exe,"""C:\Windows\system32\bitsadmin.exe"" /list /allusers",0.999393,1,0,,,1
+vm_cd4bb21755c72552,BEN-002-r3,0,none,ipconfig.exe,powershell.exe,"""C:\Windows\system32\ipconfig.exe"" /all",0.971665,1,0,,,1
+vm_eba6022c6b7beeb8,BEN-005-r3,0,none,net1.exe,net.exe,C:\Windows\system32\net1 user,0.999607,1,0,,,1
+vm_0af48a6db98b922a,BEN-005-r3,0,none,net.exe,powershell.exe,"""C:\Windows\system32\net.exe"" user",0.986126,1,0,,,1
+vm_5f3ae5eaf382fe85,BEN-007-r3,0,none,certutil.exe,powershell.exe,"""C:\Windows\system32\certutil.exe"" -store My",0.999434,1,0,,,1
+vm_64ea6537330320bd,BEN-008-r3,0,none,robocopy.exe,powershell.exe,"""C:\Windows\system32\Robocopy.exe"" C:\Lab\src C:\Lab\dst /E",0.712946,1,0,,,1
+vm_fce58cc41e87edb9,BEN-011-r3,0,none,reg.exe,powershell.exe,"""C:\Windows\system32\reg.exe"" query HKLM\Software\Microsoft\Windows\CurrentVersion",0.999928,1,0,,,1
+vm_84330dc5581f5be0,BEN-012-r3,0,none,dllhost.exe,-,C:\Windows\SysWOW64\DllHost.exe /Processid:{06622D85-6856-4460-8DE1-A81921B41C4B},0.997988,1,0,,,1
+vm_6b4ff139af4be32d,BEN-012-r3,0,none,explorer.exe,-,"C:\Windows\explorer.exe /factory,{5BD95610-9434-43C2-886C-57852CC8A120} -Embedding",0.998347,1,0,,,1
+vm_d91f5ecade1b8328,BEN-012-r3,0,none,rundll32.exe,powershell.exe,"""C:\Windows\system32\rundll32.exe"" shell32.dll,Control_RunDLL ",0.999464,1,0,,,1
+vm_68cf82f06a3fe30f,ATT-1218-007,1,T1218.007,calc.exe,msiexec.exe,calc.exe,0.99788,1,0,,,1
+vm_b737df36dd80c5d1,ATT-1218-007,1,T1218.007,msiexec.exe,-,C:\Windows\system32\msiexec.exe /V,0.955039,1,0,,,1
+vm_08557411ee8c6f78,ATT-1218-007,1,T1218.007,msiexec.exe,powershell.exe,"""C:\Windows\system32\msiexec.exe"" /i C:\Lab\app.msi /qn",0.997791,1,0,,,1
+vm_9a9d56c257e8e342,ATT-1218-003,1,T1218.003,cmstp.exe,powershell.exe,"""C:\Windows\system32\cmstp.exe"" /s C:\Lab\hello.inf",0.994748,1,1,high,RULE-CMSTP-001,1
+vm_42e56986d5fb233b,ATT-1218-005,1,T1218.005,calc.exe,mshta.exe,"""C:\Windows\System32\calc.exe"" ",0.996936,1,0,,,1
+vm_9923d4429694c98a,ATT-1218-005,1,T1218.005,mshta.exe,powershell.exe,"""C:\Windows\system32\mshta.exe"" C:\Lab\hello.hta",0.977184,1,1,high,RULE-MSHTA-001,1
+vm_a514cc661cde0e85,ATT-1218-010,1,T1218.010,calc.exe,regsvr32.exe,"""C:\Windows\System32\calc.exe"" ",0.996936,1,0,,,1
+vm_e6a164f3b897386e,ATT-1218-010,1,T1218.010,regsvr32.exe,powershell.exe,"""C:\Windows\system32\regsvr32.exe"" /s /n /u /i:C:\Lab\hello.sct scrobj.dll",0.999976,1,1,medium,RULE-REGSVR32-001,1
+vm_1df90123e3b5fa3e,ATT-1218-011,1,T1218.011,calc.exe,rundll32.exe,"""C:\Windows\system32\calc.exe"" ",0.99732,1,0,,,1
+vm_2fd998f6ddb69c63,ATT-1218-011,1,T1218.011,rundll32.exe,powershell.exe,"""C:\Windows\system32\rundll32.exe"" shell32.dll,ShellExec_RunDLL calc.exe",0.99983,1,0,,,1
+vm_71c07fcb63fd4bbf,ATT-1059-001,1,T1059.001,calc.exe,powershell.exe,"""C:\Windows\system32\calc.exe"" ",0.99831,1,0,,,1
+vm_788db6da8c7a884f,ATT-1059-001,1,T1059.001,powershell.exe,powershell.exe,"""C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"" -NoProfile -WindowStyle Hidden -Command ""Start-Process calc.exe""",0.999958,1,0,,,1
+vm_9e58a25b62c4d8be,ATT-1047,1,T1047,calc.exe,wmiprvse.exe,calc.exe,0.997879,1,0,,,1
+vm_c401a559255a182d,ATT-1047,1,T1047,wmic.exe,powershell.exe,"""C:\Windows\System32\Wbem\WMIC.exe"" process call create calc.exe",0.999637,1,1,high,RULE-WMI-001,1
+vm_a396adbf94ab46a3,ATT-1140,1,T1140,certutil.exe,powershell.exe,"""C:\Windows\system32\certutil.exe"" -decode C:\Lab\input.b64 C:\Lab\input.decoded.txt",0.998493,1,1,high,RULE-CERTUTIL-001,1
