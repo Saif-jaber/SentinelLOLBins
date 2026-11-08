@@ -2,7 +2,11 @@
 
 **Owner:** Haitham Wail Omer (Rules & Windows validation)
 **Implements:** Deliverable-1 methodology §3.6 (independent Sysmon validation), Experiment E4 external check
-**Status:** Adapter and scoring runner built and tested on synthetic input. **VM execution NOT done. Instructor authorisation NOT yet given. No VM results exist.**
+**Status:** Authorised collection complete on 2026-11-06. Adapter run produced
+`data/processed/vm_adapted.parquet` (32 events / 20 scenarios) and
+`docs/vm_missing_fields.txt`; VM restored to `clean-pre-sysmon`. Scoring is
+blocked until Saif supplies `results/models/*.joblib`. **No VM scoring numbers
+have been produced yet.**
 
 This guide covers everything from an empty VM to handing files to Saif for scoring.
 Read `docs/NOTES_TO_HAITHAM_SYSMON.txt` first — it defines the required output
@@ -23,6 +27,29 @@ contract; this document operationalises it and does not override it.
    - `docs/vm_run_log.txt` (what ran, what failed, rollback timestamps)
 6. Adapter run → `data/processed/vm_adapted.parquet` + `docs/vm_missing_fields.txt`.
 7. VM rolled back to the pre-test snapshot.
+
+### 0.1 Collection outcome (2026-11-06)
+
+The authorised run is complete. The clean dataset is **32 Sysmon Event ID 1
+rows across 20 scenarios** (12 benign scenarios / 17 rows; 8 attack scenarios /
+15 rows). `ATT-1197` (BITS) failed because BITS could not start without an
+active network connection and was excluded; no Event ID 3 rows were collected
+under host-only isolation. Full detail, including the Sysmon-flush timing bug
+and the retry history, is in `docs/vm_run_log.txt`.
+
+Files produced:
+
+- `data/raw/vm/sysmon_events.csv` (32 rows; raw collection is git-ignored)
+- `data/raw/vm/scenarios.csv` (20 scenarios; raw collection is git-ignored)
+- `data/processed/vm_adapted.parquet` (32 x 57 model-input columns + keys/audit)
+- `data/processed/vm_adapted.csv` (same table, CSV copy)
+- `docs/vm_missing_fields.txt` (14 all-NaN model-input columns and reasons)
+
+Adapter checks passed: 20 unique `scenario_id` values, no null `scenario_id`,
+no duplicate `record_id`, every event inside its scenario UTC window, and
+`tests/test_vm_schema_adapter.py` 18/18. `src/score_vm.py` is still data-blocked
+on `results/models/preprocessor.joblib` and `results/models/xgboost_baseline.joblib`;
+Saif must supply those before any VM scoring numbers exist.
 
 ## 1. Authorisation (blocking)
 
@@ -152,6 +179,19 @@ deterministic high-severity rule override as an external hybrid check, and write
 > snapshot-backed Windows VM. It is an external sanity check of transfer to raw
 > Sysmon Event ID 1 telemetry, not an estimate of real-world detection
 > performance, and it must not be generalised to enterprise deployment.
+
+Measured paragraph for the report (uses the wording above; do not upgrade it):
+
+> An authorised Sysmon collection was completed on one isolated, snapshot-backed
+> Windows 10 VM (build 10.0.19045, Sysmon 15.22, host-only network). It produced
+> 32 Event ID 1 rows across 20 scenarios: 12 benign administrative workloads
+> (17 rows) and 8 harmless LOLBin simulations (15 rows). The BITS scenario
+> (T1197) could not run without a network connection, and T1548.002, T1569.002
+> and T1105 were recorded as not feasible for the reasons in
+> `docs/vm_run_log.txt`. The VM check was limited to the scenarios actually run
+> on one isolated, snapshot-backed Windows VM. It is an external sanity check of
+> transfer to raw Sysmon Event ID 1 telemetry, not an estimate of real-world
+> detection performance, and it must not be generalised to enterprise deployment.
 
 If `docs/vm_authorisation.md` is still marked **NOT AUTHORISED**, the VM
 validation did not happen. In that case it belongs in **Limitations and future

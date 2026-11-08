@@ -1,0 +1,2 @@
+SentinelLOLBins benign BITS source file.
+This file is only copied locally inside the isolated VM.

@@ -1,38 +1,201 @@
 SENTINEL_LOLBINS - VM VALIDATION RUN LOG
 =======================================
-Fill this in during/after the collection session. Keep raw Sysmon exports and
-CSVs in data/raw/vm/ (git-ignored); record paths and findings here.
+Written after the authorised Sysmon collection session. Raw Sysmon exports and
+CSVs are kept in data/raw/vm/ (git-ignored); this file records what ran, what
+failed, and the rollback.
 
 VM identity and environment
-  VM name / ID:
-  Hypervisor:
-  Windows build:
-  Sysmon version:
-  Sysmon config file + SHA-256:
-  VM clock set to UTC (yes/no, verified how):
-  Snapshot name taken before changes:
-  Snapshot timestamp (UTC):
+  VM name / ID: SentinalLOLbins - VirtualBox VM ID d7bc92eb-0a23-4eab-acfd-3dbc7fb8efeb
+  Hypervisor: Oracle VirtualBox 7.2.22 r175245
+  Windows build: 10.0.19045 (Windows 10 22H2, 64-bit)
+  Sysmon version: 15.22
+  Sysmon config file + SHA-256: sysmonconfig-export.xml - 055FEBC600E6D7448CDF3812307275912927A62B1F94D0D933B64B294BC87162
+  Sysmon Event ID 1 verified: Yes - notepad.exe process-creation event observed
+  VM clock set to UTC (yes/no, verified how): Yes - `Get-TimeZone` returned `Id: UTC`;
+    `Get-Date` returned 2026-11-06 16:37:11 (UTC); `Get-Service Sysmon64` returned Running
+  Snapshot name taken before changes: clean-pre-sysmon (two snapshots share this name;
+    latest UUID ffafe38f-c841-435e-9db7-edb23fff4012)
+  Snapshot timestamp (UTC): 2026-11-06T14:59:20Z (latest clean-pre-sysmon);
+    earlier snapshot 2026-11-06T14:57:41Z
+  Snapshot after Sysmon install: sysmon-ready (UUID 7cd88b70-27da-4ddb-86cd-e0d53df73506)
+    at 2026-11-06T16:04:10Z; sysmon-ready-1 (UUID 9b69af5b-6e6f-4803-8069-2b012b871309)
+    at 2026-11-06T16:13:36Z
+  Snapshot before attack simulations: collection-ready
+    (UUID 507d02d0-519f-406d-82a9-ee232e2b780c, taken 2026-11-06T17:26:45Z)
+  Instructor authorisation: docs/vm_authorisation.md, Sapna Sadhwani, 30/10/2026
 
 Network state
-  During benign runs:
-  During attack runs:
+  During benign runs: Host-only adapter (VirtualBox Host-Only Ethernet Adapter) - no internet
+  During attack runs: Host-only adapter - no internet
+  Shared folder: removed before collection-ready snapshot. Re-attached temporarily
+    only to copy the three CSV exports out of the guest; removed again immediately
+    after the copy (host-side VBoxManage shows no shared folder attached).
+  Clipboard / drag-and-drop: disabled for collection; host<->guest paste was not used
+    during collection. VM-internal Ctrl+C / Ctrl+V was still available.
+
+Collection helper
+  scripts/collect_sysmon.ps1 (mirrored into the guest as C:\Lab\collect_sysmon.ps1)
+  Each run: Start-Scenario records start_utc; Export-Scenario filters Sysmon
+  Event ID 1 by [start_utc, end_utc] and the scenario's process window, then
+  appends the scenario row.
+
+  Timing bug found during the first benign pass: Export-Scenario was reading the
+  Sysmon log before Windows had flushed the newest process-creation event, so
+  several runs exported 0 rows even though the command had run. Fix: after the
+  command, wait 3 s, poll for up to 10 s for a new Event ID 1, then settle 2 s
+  before exporting. All six affected scenarios were re-run after the fix.
 
 Scenarios run (one line each)
-  scenario_id | expected_label | technique | result | notes
-  e.g. ATK-001    | 1              | T1059.001 | captured | 2 runs, both in sysmon_events.csv
-  BEN-001         | 0              | none      | captured | whoami /claims
+  scenario_id | expected_label | technique | result | Event ID 1 rows | notes
+  BEN-001         | 0 | none      | captured | 1 | whoami /all
+  BEN-003         | 0 | none      | captured | 3 | systeminfo. Window also contains
+                                                       TiWorker.exe and TrustedInstaller.exe
+                                                       (normal Windows servicing background
+                                                       activity inside the same UTC window)
+  BEN-004         | 0 | none      | captured | 1 | tasklist /v
+  BEN-006         | 0 | none      | captured | 1 | schtasks /query /fo LIST
+  BEN-009         | 0 | none      | captured | 1 | powershell -NoProfile -Command
+                                                       "Get-Command -Syntax whoami"
+  BEN-010         | 0 | none      | captured | 1 | bitsadmin /list /allusers
+  BEN-002-r3      | 0 | none      | captured | 1 | ipconfig /all. Retry 3 after the
+                                                       timing fix (original and -r2 empty)
+  BEN-005-r3      | 0 | none      | captured | 2 | net user (net.exe and net1.exe)
+                                                       Retry 3 after the timing fix
+  BEN-007-r3      | 0 | none      | captured | 1 | certutil -store My. Retry 3 after the
+                                                       timing fix
+  BEN-008-r3      | 0 | none      | captured | 1 | robocopy C:\Lab\src C:\Lab\dst /E.
+                                                       Retry 3 after the timing fix
+  BEN-011-r3      | 0 | none      | captured | 1 | reg query HKLM\Software\Microsoft\
+                                                       Windows\CurrentVersion. Retry 3 after
+                                                       the timing fix
+  BEN-012-r3      | 0 | none      | captured | 3 | rundll32 shell32.dll,Control_RunDLL.
+                                                       Window also contains explorer.exe and
+                                                       dllhost.exe parent/child activity.
+                                                       Retry 3 after the timing fix
+  ATT-1218-007    | 1 | T1218.007 | captured | 3 | msiexec /i C:\Lab\app.msi /qn
+                                                       (msiexec /V plus msiexec /i plus calc.exe)
+  ATT-1218-003    | 1 | T1218.003 | captured | 1 | cmstp.exe /s C:\Lab\hello.inf
+  ATT-1218-005    | 1 | T1218.005 | captured | 2 | mshta.exe C:\Lab\hello.hta plus calc.exe
+  ATT-1218-010    | 1 | T1218.010 | captured | 2 | regsvr32.exe /s /n /u
+                                                       /i:C:\Lab\hello.sct scrobj.dll plus calc.exe
+  ATT-1218-011    | 1 | T1218.011 | captured | 2 | rundll32.exe shell32.dll,
+                                                       ShellExec_RunDLL calc.exe plus calc.exe
+  ATT-1059-001    | 1 | T1059.001 | captured | 2 | powershell.exe -NoProfile -WindowStyle
+                                                       Hidden -Command "Start-Process calc.exe"
+                                                       plus calc.exe
+  ATT-1047        | 1 | T1047     | captured | 2 | wmic.exe process call create calc.exe
+                                                       plus calc.exe
+  ATT-1140        | 1 | T1140     | captured | 1 | certutil.exe -decode C:\Lab\input.b64
+                                                       C:\Lab\input.decoded.txt (input.b64 was
+                                                       produced locally with certutil -encode,
+                                                       outside any scenario)
+
+  Clean dataset totals after removing empty retries and the failed BITS run:
+    20 scenarios (12 benign + 8 attack), 32 Event ID 1 rows
+    (17 benign rows + 15 attack rows).
 
 What failed or was skipped (and why)
-  -
+  - ATT-1197 (T1197, BITS local transfer) FAILED and is excluded from the clean
+    dataset and from scoring. `Start-BitsTransfer -Source C:\Lab\source.txt
+    -Destination C:\Lab\bits_copy.txt` returned:
+      "There are currently no active network connections. Background Intelligent
+       Transfer Service (BITS) will try again when an adapter is connected."
+    The two Event ID 1 rows captured in its window were the powershell.exe wrapper
+    and Windows Defender NisSrv.exe, not a BITS transfer, so they are not a valid
+    T1197 observation.
+  - T1548.002 (UAC bypass) was intentionally not run. A genuine bypass needs an
+    HKCU\Software\Classes\ms-settings hijack, which is a security-control bypass
+    and close to the "no persistence" line. The written scope does not explicitly
+    name UAC bypass, so it is recorded as not feasible / out of scope.
+  - T1569.002 (PsExec-style service execution) was not run. PsExec is not
+    installed, and creating a service modifies the system, outside the harmless
+    scope.
+  - T1105 (certutil urlcache download) was not run. `certutil -urlcache` needs an
+    HTTP endpoint and the VM had no network access during attack simulations.
+  - First attempt at ATT-1218-007 failed with "The term 'A' is not recognized"
+    because the short alias had not been defined yet. No scenario was started and
+    the run was repeated successfully.
+  - During ATT-1059-001 the main PowerShell window closed and was reopened
+    non-elevated. Sysmon log access needs elevation, so it was reopened as
+    Administrator and the helper re-sourced. `Test-Path C:\Lab\out\
+    current_scenario.json` returned False, so ATT-1059-001 had already exported;
+    it was not re-run.
+
+Event ID 3 / network telemetry
+  Not collected. `sysmon_network.csv` was never created because no Sysmon Event
+  ID 3 network connections occurred under host-only isolation. The adapter was
+  run with the expected --network path, warned that the file was absent, and
+  left network_connection_true / has_destination as NaN. No values were invented.
 
 Missing fields observed in my export (adapter report cross-check)
-  See docs/vm_missing_fields.txt (paste summary here if helpful).
+  Generated by src/vm_schema_adapter.py into docs/vm_missing_fields.txt.
+  14 model-input columns are NaN for all 32 rows:
+    cmd_url_token_count, cmd_path_token_count, cmd_ip_token_count,
+    cmd_b64_token_count (dataset generator regexes not recoverable exactly);
+    flag_certutil_encode, flag_remote_file, flag_rundll32_js, flag_msbuild,
+    flag_adsi, flag_cmd_slash_c (generator predicates not recoverable exactly);
+    signed_true (no signed_status column was collected);
+    network_connection_true, has_destination (no Event ID 3);
+    integrity_ordinal (dataset ordinal mapping unpublished).
+
+Adapter run (host side)
+  Inputs:  data/raw/vm/sysmon_events.csv (32 rows), data/raw/vm/scenarios.csv
+           (20 rows), data/raw/vm/sysmon_network.csv (absent)
+  Outputs: data/processed/vm_adapted.parquet (32 rows, 57 model-input columns),
+           data/processed/vm_adapted.csv, docs/vm_missing_fields.txt
+  Validated: 20 unique scenario_id values, no null scenario_id, no duplicate
+             record_id, every event inside its scenario [start_utc, end_utc],
+             17 benign rows / 15 attack rows, 57 model-input columns.
+  Tests: 18/18 in tests/test_vm_schema_adapter.py pass.
+  Environment note: Python 3.14.4 on the host. The installed pandas 3.1.1 could
+  not load its `_ujson` DLL because an Application Control policy blocks that
+  file (WinError 4551); pandas 3.0.6 was used from a local target directory
+  (C:\LabTransfer\pydeps306) via PYTHONPATH. This is a host tooling workaround
+  only; it does not affect the collected data.
+
+Hand-off to Saif (Data & ML)
+  Ready: data/processed/vm_adapted.parquet, data/processed/vm_adapted.csv,
+  docs/vm_missing_fields.txt.
+  Blocked: results/models/preprocessor.joblib and results/models/xgboost_baseline.joblib
+  are not present in this checkout, so src/score_vm.py cannot run yet. No VM
+  scoring numbers have been produced or invented. Saif should place the frozen
+  model files in results/models/ and run:
+    python src/score_vm.py --adapted data/processed/vm_adapted.parquet --out-dir results
+  Expected outputs: results/vm_predictions.csv, results/vm_scenario_summary.csv,
+  results/vm_summary.json.
 
 Rollback
-  Rolled back to snapshot:
-  Rollback timestamp (UTC):
-  Verified by (how):
+  Rolled back to snapshot: clean-pre-sysmon (UUID ffafe38f-c841-435e-9db7-edb23fff4012)
+  Rollback timestamp (UTC): 2026-11-06T18:05:10Z (snapshot restore completed)
+  Post-restore settings: nic1=hostonly, clipboard=disabled, draganddrop=disabled,
+    no shared folder attached
+  Verification timestamp (UTC): 2026-11-08T14:20:43Z
+  Verified by (how): after restoring the snapshot, the first resume used the
+    snapshot's saved memory state and the guest's mouse/Windows became
+    unresponsive. The saved memory state was discarded (`VBoxManage discardstate`)
+    and the VM was cold-booted from the clean snapshot disk. Windows booted
+    normally and the operator ran the two checks inside the guest as Administrator:
+      PS> gsv Sysmon64
+      gsv : Cannot find any service with service name 'Sysmon64'.
+      PS> Get-WinEvent -ListLog *Sysmon*
+      Get-WinEvent : There is not an event log on the localhost computer that
+      matches "*Sysmon*".
+    Both results confirm that Sysmon and its event log are absent after the
+    rollback. Current snapshot remains clean-pre-sysmon (ffafe38f-...), host-only,
+    clipboard disabled, drag-and-drop disabled, no shared folder.
+  Note: a snapshot named "last" (UUID 697d7547-4d61-40dc-b38b-89e3bfec99b3)
+    exists in the snapshot tree from the troubleshooting session. It is not part
+    of the validated chain and was not used for the rollback.
+
+Clock verification (paste the VM output here)
+  Get-TimeZone:
+    Id: UTC
+    DisplayName: (UTC) Co-ordinated Universal Time
+  Get-Date:
+    Friday, November 6, 2026 4:37:11 PM (UTC)
+  Get-Service Sysmon64:
+    Status: Running
 
 Sign-off
-  Operator:
-  Date (UTC):
+  Operator: Haitham Wail Omer
+  Date (UTC): 2026-11-06

@@ -61,32 +61,34 @@ Milestone: Weeks 7-8
 Label: `rules-vm`
 Milestone: Weeks 4-6
 
-- [ ] Rule definitions for PowerShell, WMI, PsExec, mshta, rundll32
-- [ ] Each rule: ID, condition, reason text, ATT&CK mapping
-- [ ] Store in `rules/`
+- [x] Rule definitions for PowerShell, WMI, PsExec, mshta, rundll32
+- [x] Each rule: ID, condition, reason text, ATT&CK mapping
+- [x] Store in `rules/`
 
 ### Issue: Safe VM plan and Sysmon setup
 Label: `rules-vm`
 Milestone: Weeks 4-6
 
-- [ ] Snapshot-backed Windows VM, isolated network
-- [ ] Sysmon installed, Event ID 1 confirmed
-- [ ] Written authorisation and safety notes
+- [x] Snapshot-backed Windows VM, isolated network
+- [x] Sysmon installed, Event ID 1 confirmed
+- [x] Written authorisation and safety notes
 
 ### Issue: Collect Sysmon telemetry and run approved tests
 Label: `rules-vm`
 Milestone: Weeks 7-8
 
-- [ ] Capture benign admin workloads
-- [ ] Run authorised Atomic Red Team tests for selected LOLBins
-- [ ] Export Event ID 1 logs with dates and scenario IDs
+- [x] Capture benign admin workloads
+- [x] Run authorised Atomic Red Team tests for selected LOLBins
+      (manual equivalent commands were used where Atomic Red Team was not
+      installed; ATT-1197 failed and was excluded, see `docs/vm_run_log.txt`)
+- [x] Export Event ID 1 logs with dates and scenario IDs
 
 ### Issue: Schema adapter for raw telemetry
 Label: `rules-vm`
 Milestone: Weeks 7-8
 
-- [ ] Map Sysmon fields to dataset fields
-- [ ] Mark missing fields explicitly, never invent values
+- [x] Map Sysmon fields to dataset fields
+- [x] Mark missing fields explicitly, never invent values
 
 ---
 

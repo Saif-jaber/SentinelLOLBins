@@ -1,0 +1,9 @@
+[version]
+Signature=$chicago$
+AdvancedINF=2.5
+
+[DefaultInstall]
+RunPreSetupCommands=RunPreSetupCommandsSection
+
+[RunPreSetupCommandsSection]
+C:\Windows\System32\calc.exe

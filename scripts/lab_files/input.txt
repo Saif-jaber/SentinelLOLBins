@@ -1,0 +1,2 @@
+SentinelLOLBins benign certutil input file.
+This file is only encoded and decoded locally inside the isolated VM.

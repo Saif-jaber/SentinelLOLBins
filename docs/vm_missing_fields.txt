@@ -1,0 +1,28 @@
+VM ADAPTER MISSING-FIELDS REPORT
+events: data\raw\vm\sysmon_events.csv
+rows: 32
+out: data\processed\vm_adapted.parquet
+
+Columns containing missing (NaN) values and why:
+  cmd_b64_token_count: 32/32 missing - dataset generator regex not recoverable; excluded to avoid miscalibration
+  cmd_ip_token_count: 32/32 missing - dataset generator regex not recoverable; excluded to avoid miscalibration
+  cmd_path_token_count: 32/32 missing - dataset generator regex not recoverable; excluded to avoid miscalibration
+  cmd_url_token_count: 32/32 missing - dataset generator regex not recoverable; excluded to avoid miscalibration
+  flag_adsi: 32/32 missing - generator predicate not recoverable exactly (~0.25% disagreement); excluded
+  flag_certutil_encode: 32/32 missing - generator sets it on the urlcache|decode chain, not on -encode literally; not recoverable exactly
+  flag_cmd_slash_c: 32/32 missing - generator predicate not recoverable exactly (11 fp / 100 benign hits); excluded
+  flag_msbuild: 32/32 missing - generator predicate not recoverable exactly (template-derived; some positives contain no 'msbuild' string); excluded
+  flag_remote_file: 32/32 missing - generator predicate not recoverable exactly (partial: downloadstring|iwr; fp>0); excluded
+  flag_rundll32_js: 32/32 missing - generator predicate not recoverable exactly (partial: javascript:; fn present); excluded
+  has_destination: 32/32 missing - Sysmon Event ID 3 not supplied (--network)
+  integrity_ordinal: 32/32 missing - dataset ordinal mapping unpublished; left missing by policy
+  network_connection_true: 32/32 missing - Sysmon Event ID 3 not supplied (--network)
+  signed_true: 32/32 missing - requires Get-AuthenticodeSignature on the VM; pass a signed_status column to fill
+
+Notes:
+  * parent_child_suspicious is an approximation (office/script-host
+    parent AND powershell/pwsh/cmd child); dataset generator predicate is
+    not published. parent_is_explorer is separate, as in the dataset.
+  * cmd_normalized reproduces the dataset entity templating (~87.5% byte-
+    exact on train); case preserved.
+  * expected_label / technique_expected are join keys, never features.

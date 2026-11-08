@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>SentinelLOLBins benign HTA</title>
+</head>
+<body>
+    <p>Harmless lab file. This HTA only opens Calculator.</p>
+    <script language="VBScript">
+        Set sh = CreateObject("WScript.Shell")
+        sh.Run "calc.exe", 1, False
+        window.close
+    </script>
+</body>
+</html>

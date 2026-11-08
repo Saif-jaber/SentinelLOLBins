@@ -95,10 +95,14 @@ E3 ablation, E4 held-out-technique evaluation, benign-heavy testing and error
 analysis are complete. The deterministic rules baseline (E1) and the
 hybrid-with-rules comparison (E5) are also complete; see `results/master_results.csv`.
 
-**VM validation is not a result.** `data/processed/vm_adapted.parquet` does not
-exist, instructor authorisation is still pending, and `src/score_vm.py` refuses
-to produce numbers without real telemetry. Report this as a limitation, not as
-completed external validation. Dashboard/API integration remains future work.
+**VM collection is complete; VM scoring is not.** Instructor authorisation was
+given on 30/10/2026 and an isolated Sysmon run on 2026-11-06 produced 32 Event
+ID 1 rows across 20 scenarios (12 benign, 8 attack). `data/processed/vm_adapted.parquet`
+and `docs/vm_missing_fields.txt` exist; the VM was rolled back to its clean
+snapshot. No VM detection metrics exist yet because `src/score_vm.py` needs the
+frozen `results/models/*.joblib` files from Saif. Report this as a limited
+external check, not as completed validation or a real-world estimate.
+Dashboard/API integration remains future work.
 
 ## 11. References and Resources
 
