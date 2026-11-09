@@ -45,7 +45,7 @@ data/processed/securebert_debiased/
 *.pt
 *.pth
 *.onnx
-models/
+/models/
 artifacts/
 mlruns/
 wandb/
@@ -70,6 +70,10 @@ tmp/
 temp/
 *.tmp
 
-# Trained models
-results/models/
+# Trained models (only the frozen artifacts the API/dashboard need are tracked)
+results/models/*
+!results/models/preprocessor.joblib
+!results/models/xgb_baseline.joblib
+!results/models/encoder_scaler.joblib
+!results/models/encoder_head.joblib
 
