@@ -7,6 +7,11 @@ tokenizers>=0.21
 torch>=2.2
 pyarrow
 joblib
+pyyaml
 tqdm
 matplotlib
 flask
+streamlit
+fastapi
+uvicorn
+pytest
