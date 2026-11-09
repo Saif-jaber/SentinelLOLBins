@@ -10,48 +10,48 @@ Copy each block into a new GitHub issue. Suggested labels: `data-ml`, `rules-vm`
 Label: `data-ml`
 Milestone: Weeks 4-6
 
-- [ ] Download `winlolbin_gt_processed_features_10m_plus.csv` + 4 sample files from Zenodo into `data/raw/`
-- [ ] Run `src/audit_dataset.py`
-- [ ] Check columns, nulls, class balance, label column
-- [ ] Identify grouping key (template/scenario/command family)
-- [ ] List leakage columns (MITRE ground truth, rationales)
-- [ ] Build 50k benign + 50k malicious subset -> `data/processed/sample_100k.parquet`
+- [x] Download `winlolbin_gt_processed_features_10m_plus.csv` + 4 sample files from Zenodo into `data/raw/`
+- [x] Run `src/audit_dataset.py`
+- [x] Check columns, nulls, class balance, label column (see `docs/dataset_audit.md`)
+- [x] Identify grouping key (template/scenario/command family) — `cmd_normalized`
+- [x] List leakage columns (MITRE ground truth, rationales)
+- [x] Build 50k benign + 50k malicious subset -> `data/processed/sample_100k.parquet`
 
 ### Issue: Group-aware train/val/test splits
 Label: `data-ml`
 Milestone: Weeks 4-6
 
-- [ ] Split by group, not by row
-- [ ] Hold out one full attack family/scenario for E4
-- [ ] Write manifests to `data/splits/*.json`
-- [ ] Commit only manifests, not data files
+- [x] Split by group, not by row
+- [x] Hold out one full attack family/scenario for E4
+- [x] Write manifests to `data/splits/*.json`
+- [x] Commit only manifests, not data files
 
 ### Issue: XGBoost baseline
 Label: `data-ml`
 Milestone: Weeks 4-6
 
-- [ ] `src/preprocess.py` — fit on train only, drop leakage columns
-- [ ] `src/train_xgb.py` — train, evaluate precision/recall/F1/FPR
-- [ ] Save model to `results/models/`
-- [ ] Test on benign-heavy sample for false positives
+- [x] `src/preprocess.py` — fit on train only, drop leakage columns
+- [x] `src/train_xgb.py` — train, evaluate precision/recall/F1/FPR
+- [x] Save model to `results/models/`
+- [x] Test on benign-heavy sample for false positives
 
 ### Issue: SecureBERT 2.0 encoder branch
 Label: `data-ml`
 Milestone: Weeks 4-6
 
-- [ ] Frozen SecureBERT 2.0 embeddings + classification head
-- [ ] Fallback to SecureBERT if input/compute incompatible
-- [ ] Same splits as XGBoost
-- [ ] Record checkpoint and seeds in `configs/encoder.yaml`
+- [x] Frozen SecureBERT 2.0 embeddings + classification head
+- [x] Fallback to SecureBERT if input/compute incompatible
+- [x] Same splits as XGBoost
+- [x] Record checkpoint and seeds in `results/encoder_config.json`
 
 ### Issue: Ablations, thresholds, error analysis
 Label: `data-ml`
 Milestone: Weeks 7-8
 
-- [ ] E1-E4 results tables
-- [ ] Hybrid without rules / without context ablation
-- [ ] Threshold tuning on validation only
-- [ ] Example correct and incorrect events for report
+- [x] E1-E4 results tables
+- [x] Hybrid without rules / without context ablation
+- [x] Threshold tuning on validation only
+- [x] Example correct and incorrect events for report
 
 ---
 
@@ -166,7 +166,7 @@ Milestone: Weeks 4-6
 Label: `shared`
 Milestone: Weeks 7-8
 
-- [ ] Saif provides `score_event(row) -> alert` function
+- [x] Saif provides `score_event(row) -> alert` function (`src/alert_scoring.py`, `docs/alert_record_schema.md`)
 - [ ] Hamdan provides POST endpoint that calls it
 - [ ] Both agree on input fields and output JSON
 
