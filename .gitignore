@@ -55,6 +55,9 @@ wandb/
 results/**/*.png
 results/**/*.pdf
 results/**/*.html
+# Keep curated evidence figures (PR curve, confusion matrix, dashboard shots)
+!results/figures/
+!results/figures/*.png
 experiments/
 logs/
 *.log
@@ -69,6 +72,9 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# Local planning folder (tracked collection assets live in scripts/)
+vm/
 
 # Trained models (only the frozen artifacts the API/dashboard need are tracked)
 results/models/*

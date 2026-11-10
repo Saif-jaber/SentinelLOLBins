@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 from transformers import AutoTokenizer, AutoModel
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 

@@ -3,12 +3,12 @@ import pandas as pd
 from xgboost import XGBClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 RESULT_DIR = os.path.join(BASE, "results")
 
-# loading the same xgb files like in the training script
+# Load the same XGBoost artifacts used by the training script.
 def load(name):
     return pd.read_parquet(os.path.join(PROC, f"xgb_{name}.parquet"))
 
@@ -24,7 +24,7 @@ y_holdout = holdout["label"]
 
 all_cols = [c for c in train.columns if c != "label"]
 
-# splitting the encoded columns into groups based on their names
+# Group the encoded columns by name.
 name_cols = [c for c in all_cols if c.startswith("cat__process_name_")]
 parent_cols = [c for c in all_cols if c.startswith("cat__parent_process_")]
 cmd_cols = [c for c in all_cols if c.startswith("num__cmd_") or c.startswith("num__flag_")]
@@ -44,7 +44,7 @@ print("features per variant:")
 for k, v in variants.items():
     print(f"  {k}: {len(v)}")
 
-# threshold is tuned on validation per variant, never on test
+# Tune the threshold on validation for each variant; never use test.
 def choose_threshold(proba, y):
     best_t, best_f1 = 0.5, -1.0
     for t in [round(x * 0.05, 2) for x in range(1, 20)]:
@@ -100,7 +100,7 @@ for title, cols in variants.items():
     rows.append(row)
     print(f"done: {title} -> t={threshold}")
 
-# table of results for the report
+# Results table for the report.
 results = pd.DataFrame(rows)
 print("\nE3 ablation (threshold tuned on val; test set + E4 holdout):")
 print(results.to_string(index=False))

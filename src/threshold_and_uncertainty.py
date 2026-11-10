@@ -5,14 +5,14 @@ import numpy as np
 import pandas as pd
 import joblib
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 SPLITS = os.path.join(BASE, "data", "splits")
 MODEL_DIR = os.path.join(BASE, "results", "models")
 RESULT_DIR = os.path.join(BASE, "results")
 
-# same leakage drop list as preprocess.py so the columns line up
+# Use the same leakage drop list as preprocess.py so columns line up.
 DROP = [
     "label",
     "mitre_technique", "command_source", "rule_category",
@@ -38,7 +38,7 @@ p_test = model.predict_proba(pre.transform(test[features]))[:, 1]
 y_val = val["label"].values
 y_test = test["label"].values
 
-# metrics that never divide by zero
+# Metrics that avoid division by zero.
 def scores(y, pred):
     tp = int(((pred == 1) & (y == 1)).sum())
     fp = int(((pred == 1) & (y == 0)).sum())
@@ -50,7 +50,7 @@ def scores(y, pred):
     fpr = fp / (fp + tn) if (fp + tn) else 0.0
     return prec, rec, f1, fpr, tp, fp, fn, tn
 
-# threshold sweep on validation only
+# Sweep thresholds on validation only.
 rows = []
 for t in np.round(np.arange(0.05, 1.0, 0.05), 2):
     prec, rec, f1, fpr, tp, fp, fn, tn = scores(y_val, (p_val >= t).astype(int))
@@ -67,7 +67,7 @@ for t in np.round(np.arange(0.05, 1.0, 0.05), 2):
 sweep = pd.DataFrame(rows)
 sweep.to_csv(os.path.join(RESULT_DIR, "threshold_sweep_val.csv"), index=False)
 
-# pick by exact validation F1; on ties keep the lowest threshold (higher recall)
+# Pick the best validation F1; ties go to the lowest threshold, which favours recall.
 best = sweep.sort_values(["f1_exact", "threshold"], ascending=[False, True]).iloc[0]
 CHOSEN = float(best["threshold"])
 print("chosen threshold (val F1):", CHOSEN)
@@ -84,7 +84,7 @@ with open(os.path.join(RESULT_DIR, "chosen_threshold.json"), "w") as f:
         "seed": 42,
     }, f, indent=2)
 
-# final test numbers at the chosen threshold
+# Final test metrics at the chosen threshold.
 pred_test = (p_test >= CHOSEN).astype(int)
 prec, rec, f1, fpr, tp, fp, fn, tn = scores(y_test, pred_test)
 test_row = {
@@ -95,7 +95,7 @@ test_row = {
 pd.DataFrame([test_row]).to_csv(os.path.join(RESULT_DIR, "threshold_test.csv"), index=False)
 print("test:", test_row)
 
-# grouped bootstrap: resample command-template groups, not rows
+# Grouped bootstrap: resample command-template groups, not individual rows.
 group_ids = test["cmd_normalized"].values
 groups = {}
 for i, g in enumerate(group_ids):
@@ -125,9 +125,9 @@ ci = pd.DataFrame([{
 ci.to_csv(os.path.join(RESULT_DIR, "ci_test.csv"), index=False)
 print(ci.to_string(index=False))
 
-# inference latency: single-event path and batched path
+# Measure inference latency for one event and for a batch.
 X_test_mat = pre.transform(test[features])
-model.predict_proba(X_test_mat[:10])  # warmup
+model.predict_proba(X_test_mat[:10])  # Warm up the model before timing.
 
 t0 = time.perf_counter()
 model.predict_proba(X_test_mat)

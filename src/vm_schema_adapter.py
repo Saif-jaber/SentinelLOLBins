@@ -1,79 +1,53 @@
-"""Sysmon Event ID 1 -> WinLOLBIN-GT model-input adapter (Haitham, VM workstream).
+"""Adapt raw Sysmon Event ID 1 rows to the model input used by SentinelLOLBins.
 
-Purpose
--------
-Convert raw Sysmon Event ID 1 rows collected on the authorised, isolated
-Windows evaluation VM (data/raw/vm/sysmon_events.csv) into the *same* feature
-schema the frozen XGBoost model was trained on, without inventing values for
-fields that cannot be obtained from the logs.
+The input is telemetry from the authorised, isolated Windows VM. The output has
+the same 57 feature columns that ``src/preprocess.py`` feeds to the XGBoost
+pipeline. One-hot encoding happens later, so this file does not contain literal
+one-hot columns.
 
-Contract (see docs/NOTES_TO_HAITHAM_SYSMON.txt section 6)
----------------------------------------------------------
-* Never invent a value. Fields that cannot be computed stay NaN and are listed
-  in the report file (docs/vm_missing_fields.txt) with the reason.
-* Categorical values are lowercase image basenames ("cmd.exe"), unseen names
-  are fine (the OneHotEncoder uses handle_unknown="ignore").
-* expected_label / technique_expected are NEVER feature columns. They are
-  carried through only as join keys for Saif's scoring script when
-  --scenarios is supplied.
-* The 57 columns produced here match the model-input schema (i.e. everything
-  src/preprocess.py feeds to the ColumnTransformer, minus the drops). After
-  one-hot encoding, that is the pipeline's 108-column internal width - the VM
-  file does NOT need literal one-hot columns.
+Rules:
 
-Feature provenance (measured against data/processed/sample_100k.parquet)
--------------------------------------------------------------------------
-Recovered exactly (100% agreement on 20,000 random train rows; the adapter is
-deterministic, so this holds for any input):
-  cmd_len (== len of templated string), cmd_token_count, cmd_entropy
-  (Shannon entropy, log2, of the templated string),
-  cmd_avg_token_len (== cmd_len / cmd_token_count),
-  cmd_pipe_count, cmd_amp_count, cmd_semicolon_count, cmd_redirect_count,
-  cmd_backtick_count, cmd_quote_count, cmd_percent_count, cmd_dash_count,
-  flag_enc, flag_ep_bypass, flag_hidden_window, flag_nop, flag_iex,
-  flag_downloadstring, flag_invoke_expression, flag_frombase64,
-  flag_regsvr32_script, flag_mshta, flag_certutil_urlcache, flag_bitsadmin,
-  flag_schtasks_remote, flag_wmic_remote, flag_cmstp, flag_mimikatz
+* Do not invent values. If Sysmon cannot supply a field, leave it as NaN and
+  write the reason to ``docs/vm_missing_fields.txt``.
+* Process names are lowercase image basenames. Unknown names are allowed; the
+  encoder uses ``handle_unknown="ignore"``.
+* ``expected_label`` and ``technique_expected`` are join keys only. They are
+  never model inputs.
+* A missing required column or an empty ``Image`` stops the run.
 
-Approximated (documented, always reported):
-  cmd_normalized     -> entity-templated copy of CommandLine (~87.5% byte-exact
-                        reproduction of the dataset's normalization on train;
-                        URLs/GUIDs/IPs/hashes/base64/paths are templated,
-                        case preserved). Used for cmd_* stats; safe for rules.
-  parent_child_suspicious
-                     -> office/script host parent AND powershell/pwsh/cmd child.
-                        The dataset's exact generator predicate is not published;
-                        this is the documented approximation matched to the
-                        observed evidence (winword/excel/wscript parents,
-                        powershell/cmd children). parent_is_explorer remains a
-                        separate feature, exactly as in the dataset.
+Column provenance was checked against ``data/processed/sample_100k.parquet``:
 
-Not derivable from logs -> always NaN (reported):
-  cmd_url_token_count, cmd_path_token_count, cmd_ip_token_count,
-  cmd_b64_token_count  (dataset generator regexes differ; ~92-98% agreement
-                         possible but not exact - excluded deliberately)
-  flag_certutil_encode, flag_remote_file, flag_rundll32_js, flag_msbuild,
-  flag_adsi, flag_cmd_slash_c
-                        (generator templates not recoverable exactly;
-                         a systematically-off flag is worse than a missing one)
-  signed_true           -> needs Get-AuthenticodeSignature on the VM; pass an
-                         optional signed_status column (valid/invalid/unsigned)
-  network_connection_true, has_destination
-                        -> from --network sysmon_network.csv (Event ID 3);
-                           NaN when not supplied, 0/1 when supplied
-  integrity_ordinal     -> dataset ordinal mapping unpublished; left NaN
+* Command counts, length, entropy, and the 16 recoverable ``flag_*`` columns
+  match the dataset exactly on 20,000 training rows.
+* ``cmd_normalized`` reproduces the dataset's entity templating for about 87.5%
+  of training rows. URLs, GUIDs, IPs, hashes, base64 strings, and paths are
+  replaced; case is preserved.
+* ``parent_child_suspicious`` is an approximation: office or script-host parent
+  plus a PowerShell, pwsh, or cmd child. The generator predicate is not
+  published. ``parent_is_explorer`` remains a separate feature.
 
-Usage
------
-  python src/vm_schema_adapter.py \
-      --events data/raw/vm/sysmon_events.csv \
-      --network data/raw/vm/sysmon_network.csv \
-      --scenarios data/raw/vm/scenarios.csv \
-      --out data/processed/vm_adapted.parquet \
-      --report docs/vm_missing_fields.txt
+These columns cannot be recovered exactly and stay NaN:
 
-Exit codes: 0 ok; 2 for contract violations (missing required column,
-empty Image, duplicate ProcessId+UtcTime+Image rows dropped out).
+* ``cmd_url_token_count``, ``cmd_path_token_count``, ``cmd_ip_token_count``,
+  ``cmd_b64_token_count`` - the generator regexes are not published, and partial
+  matches would skew the model.
+* ``flag_certutil_encode``, ``flag_remote_file``, ``flag_rundll32_js``,
+  ``flag_msbuild``, ``flag_adsi``, ``flag_cmd_slash_c`` - the generator
+  conditions are not reproducible exactly.
+* ``signed_true`` - needs a ``signed_status`` column from
+  ``Get-AuthenticodeSignature``.
+* ``network_connection_true``, ``has_destination`` - come from Event ID 3 when
+  ``--network`` is supplied.
+* ``integrity_ordinal`` - the dataset ordinal mapping is not published.
+
+Usage:
+
+    python src/vm_schema_adapter.py \
+        --events data/raw/vm/sysmon_events.csv \
+        --network data/raw/vm/sysmon_network.csv \
+        --scenarios data/raw/vm/scenarios.csv \
+        --out data/processed/vm_adapted.parquet \
+        --report docs/vm_missing_fields.txt
 """
 
 from __future__ import annotations
@@ -88,9 +62,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-# --------------------------------------------------------------------------- #
-# constants (verified against the dataset; do not "improve" without evidence) #
-# --------------------------------------------------------------------------- #
+# Constants checked against the dataset. Do not change them without evidence.
 
 LOLBIN_CHILD_PROCESSES = frozenset({"powershell.exe", "pwsh.exe", "cmd.exe"})
 SCRIPT_HOST_PARENTS = frozenset({"wscript.exe", "cscript.exe"})
@@ -126,17 +98,35 @@ MODEL_INPUT_COLUMNS = [
     "integrity_ordinal",
 ]
 
+# Defaults for the 14 columns raw telemetry cannot recover, used only for
+# hand-typed/manual events where the frozen model probability is retained as
+# evidence. The dashboard and API share this so the two paths cannot drift.
+MANUAL_FEATURE_DEFAULTS = {
+    "cmd_url_token_count": 0,
+    "cmd_path_token_count": 0,
+    "cmd_ip_token_count": 0,
+    "cmd_b64_token_count": 0,
+    "flag_certutil_encode": 0,
+    "flag_remote_file": 0,
+    "flag_rundll32_js": 0,
+    "flag_msbuild": 0,
+    "flag_adsi": 0,
+    "flag_cmd_slash_c": 0,
+    "signed_true": 0,
+    "network_connection_true": 0,
+    "has_destination": 0,
+    "integrity_ordinal": 0,
+}
+
 PASS_THROUGH_COLUMNS = ["scenario_id", "record_id"]
-EXTRA_CONTEXT_COLUMNS = ["expected_label", "technique_expected"]  # join keys only
+EXTRA_CONTEXT_COLUMNS = ["expected_label", "technique_expected"]  # Join keys only; never features.
 RAW_AUDIT_COLUMNS = ["UtcTime", "Computer", "ProcessId", "Image", "ParentImage",
                      "CommandLine", "ParentCommandLine", "User", "IntegrityLevel"]
 
 NEVER_FEATURE_COLUMNS = {"expected_label", "technique_expected", "scenario_id",
                          "record_id", "label", "mitre_technique"}
 
-# --------------------------------------------------------------------------- #
-# command-line normalization (entity templating, case preserved)              #
-# --------------------------------------------------------------------------- #
+# Command-line normalisation. Entity templating only; case is preserved.
 _MSI_URL = re.compile(r"(?i)(ms-appinstaller:|script:)[^\s\"']+")
 _URL = re.compile(r"(?<![A-Za-z0-9/_-])(?:https?|ftp)://[^\s\"'<>]*")
 _GUID = re.compile(r"(?i)\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}")
@@ -172,9 +162,7 @@ def normalize_command_line(text: str) -> str:
     return t
 
 
-# --------------------------------------------------------------------------- #
-# flag patterns recovered exactly (100% agreement, fp=0, fn=0, 20k train)     #
-# --------------------------------------------------------------------------- #
+# Flag patterns that reproduce the dataset exactly on 20,000 training rows.
 _FLAG_PATTERNS = {
     "flag_enc": re.compile(r"-enc(odedcommand)?\b", re.I),
     "flag_ep_bypass": re.compile(r"-ep\s*bypass|-executionpolicy\s*bypass", re.I),
@@ -323,9 +311,7 @@ def compute_row_features(raw: Dict[str, Any],
     return out
 
 
-# --------------------------------------------------------------------------- #
-# driver                                                                      #
-# --------------------------------------------------------------------------- #
+# Command-line entry point.
 REQUIRED_EVENT_COLUMNS = ["Image", "CommandLine", "ParentImage", "ProcessId",
                           "UtcTime", "scenario_id"]
 

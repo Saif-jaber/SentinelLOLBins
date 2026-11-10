@@ -11,7 +11,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from xgboost import XGBClassifier
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 SPLITS = os.path.join(BASE, "data", "splits")
@@ -20,7 +20,7 @@ RESULT_DIR = os.path.join(BASE, "results")
 MODEL_DIR = os.path.join(BASE, "results", "models")
 os.makedirs(SPLITS_OUT, exist_ok=True)
 
-# ----- 1. remove generator markers and repair the fields they polluted -----
+# 1. Remove generator markers and repair the fields they affected.
 MARKER = re.compile(r"-?[A-Za-z0-9_:-]*wlgt[A-Za-z0-9_:-]*", re.I)
 
 def clean_text(s):
@@ -66,7 +66,7 @@ print("rows dropped for cross-class templates:", int(len(shared)))
 
 df.to_parquet(os.path.join(PROC, "sample_100k_debiased.parquet"), index=False)
 
-# ----- 2. group-aware splits on the cleaned template key -----
+# 2. Build group-aware splits from the cleaned template key.
 manifest = json.load(open(os.path.join(SPLITS, "manifest.json")))
 holdout_techs = manifest["holdout_techniques"]
 
@@ -120,7 +120,7 @@ json.dump({
     "holdout_template_overlap_dropped": int(holdout_before - len(holdout)),
 }, open(os.path.join(SPLITS_OUT, "manifest.json"), "w"), indent=2)
 
-# ----- 3. same features/preprocessing recipe as the main XGBoost run -----
+# 3. Use the same features and preprocessing as the main XGBoost run.
 DROP = [
     "label",
     "mitre_technique", "command_source", "rule_category",

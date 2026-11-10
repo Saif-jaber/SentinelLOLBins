@@ -4,13 +4,13 @@ import pandas as pd
 import joblib
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 MODEL_DIR = os.path.join(BASE, "results", "models")
 RESULT_DIR = os.path.join(BASE, "results")
 
-# loading the trained model, no training here
+# Load the trained model; no training happens here.
 model = joblib.load(os.path.join(MODEL_DIR, "xgb_baseline.joblib"))
 
 test = pd.read_parquet(os.path.join(PROC, "xgb_test.parquet"))
@@ -20,7 +20,7 @@ y_test = test["label"]
 benign = test[test["label"] == 0]
 mal = test[test["label"] == 1]
 
-# realistic prevalence, 1 malicious per 100 benign (about 1%)
+# Realistic prevalence: one malicious event per 100 benign (about 1%).
 n_mal = max(1, len(benign) // 100)
 mal_slice = mal.sample(n_mal, random_state=42)
 heavy = pd.concat([benign, mal_slice], ignore_index=True)
@@ -31,10 +31,10 @@ print("benign-heavy set:", len(heavy), "| benign:", len(benign), "| malicious:",
 
 proba = model.predict_proba(Xh)[:, 1]
 
-THRESHOLD = 0.5  # fallback only
+THRESHOLD = 0.5  # Fallback when the saved threshold is unavailable.
 thr_path = os.path.join(RESULT_DIR, "chosen_threshold.json")
 if os.path.exists(thr_path):
-    THRESHOLD = json.load(open(thr_path))["threshold"]  # selected on val, never test
+    THRESHOLD = json.load(open(thr_path))["threshold"]  # Selected on validation, never on test.
 
 pred = (proba >= THRESHOLD).astype(int)
 
@@ -44,7 +44,7 @@ print(f"precision={precision_score(yh, pred):.3f} recall={recall_score(yh, pred)
 print(f"tn={tn} fp={fp} fn={fn} tp={tp}")
 print(f"false alarms per 10,000 benign events: {fp / len(benign) * 10000:.1f}")
 
-# checking higher thresholds to see how precision and recall move
+# Check higher thresholds to see how precision and recall change.
 rows = []
 for t in sorted({THRESHOLD, 0.5, 0.9, 0.99}):
     pred_t = (proba >= t).astype(int)
@@ -64,7 +64,7 @@ for t in sorted({THRESHOLD, 0.5, 0.9, 0.99}):
         "fp_per_10k_benign": round(fp_ / len(benign) * 10000, 1),
     })
 
-# saving the summary numbers
+# Save the summary numbers.
 out = pd.DataFrame(rows)
 os.makedirs(RESULT_DIR, exist_ok=True)
 out.to_csv(os.path.join(RESULT_DIR, "benign_heavy_results.csv"), index=False)

@@ -7,25 +7,25 @@ df = pd.read_parquet(os.path.join(BASE, "data", "processed", "sample_100k.parque
 
 print("loaded:", df.shape)
 
-#taking some pieces of data for testing the generalization later with every 4th step
+# Hold out every fourth technique so E4 tests unseen techniques.
 mal = df[df["label"] == 1]
 techs = sorted(mal["mitre_technique"].dropna().unique())
 holdout_techs = techs[::4]
 print("total techniques:", len(techs))
 print("holdout:", holdout_techs)
 
-# filter the rows for the holdouts + filter the rest
+# Separate the held-out techniques from the remaining rows.
 holdout = df[df["mitre_technique"].isin(holdout_techs)]
 rest = df[~df["mitre_technique"].isin(holdout_techs)]
 print("holdout rows:", len(holdout), "| rest rows:", len(rest))
 
-# from the rest of the rows filter the benign ones + template groups
+# Split benign rows by command template.
 benign = rest[rest["label"] == 0]
 groups = benign["cmd_normalized"].drop_duplicates().sample(frac=1, random_state=42)
 print("benign rows:", len(benign))
 print("benign templates:", len(groups))
 
-# spliting the ditribution for the model + taking the rows which is the corosponding to the 3 metrics + prints for checking to make sure
+# Assign whole templates to train, validation, and test.
 n = len(groups)
 train_g = groups[:int(0.70 * n)]
 val_g   = groups[int(0.70 * n):int(0.85 * n)]
@@ -39,7 +39,7 @@ print("benign train:", len(ben_train))
 print("benign val:", len(ben_val))
 print("benign test:", len(ben_test))
 
-# same logic above but make for malicious attacks
+# Repeat the template split for malicious rows.
 mal_rest = rest[rest["label"] == 1]
 mal_groups = mal_rest["cmd_normalized"].drop_duplicates().sample(frac=1, random_state=42)
 
@@ -56,7 +56,7 @@ print("malicious train:", len(mal_train))
 print("malicious val:", len(mal_val))
 print("malicious test:", len(mal_test))
 
-# combine all sets into one set for each metric for model use
+# Combine benign and malicious rows for each split.
 train = pd.concat([ben_train, mal_train], ignore_index=True)
 val   = pd.concat([ben_val,   mal_val],   ignore_index=True)
 test  = pd.concat([ben_test,  mal_test],  ignore_index=True)
@@ -74,7 +74,7 @@ holdout = holdout[~holdout["cmd_normalized"].isin(seen_templates)]
 holdout_overlap_dropped = holdout_before - len(holdout)
 print("holdout overlap dropped:", holdout_overlap_dropped, "| kept:", len(holdout))
 
-# manifest for the evidence and for later tracebility and later debugging or model use
+# Save split manifests so the exact rows can be traced later.
 SPLIT_DIR = os.path.join(BASE, "data", "splits")
 os.makedirs(SPLIT_DIR, exist_ok=True)
 

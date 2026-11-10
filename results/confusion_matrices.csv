@@ -1,0 +1,36 @@
+experiment,dataset,arm,threshold,n,tp,fp,fn,tn,precision,recall,f1,fpr,derived,source,notes
+E2_model_comparison,original,XGBoost (full context),0.55,14029,6424,9,4,7592,0.9986,0.9994,0.999,0.0012,0,results/test_event_outcomes.csv,
+E1_rules_only,original,Deterministic rules (Haitham),,14029,217,1,6211,7600,0.9954,0.0338,0.0653,0.0001,0,results/rules_test.csv,
+E1_rules_only,original,Deterministic rules (Haitham),,8122,320,,7802,,,0.0394,,,0,results/rules_holdout.csv,"E4 holdout, malicious-only: FP/TN undefined"
+E5_hybrid_rules,original,xgboost / base,0.55,14186,6718,8,2,7458,0.9988,0.9997,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=val
+E5_hybrid_rules,original,xgboost / base,0.55,14029,6424,9,4,7592,0.9986,0.9994,0.999,0.0012,0,results/hybrid_rules_results.csv,split=test
+E5_hybrid_rules,original,xgboost / base,0.55,8122,8033,0,89,0,1.0,0.989,0.9945,,0,results/hybrid_rules_results.csv,split=holdout
+E5_hybrid_rules,original,xgboost / override_high,0.55,14186,6718,8,2,7458,0.9988,0.9997,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=val
+E5_hybrid_rules,original,xgboost / override_high,0.55,14029,6425,9,3,7592,0.9986,0.9995,0.9991,0.0012,0,results/hybrid_rules_results.csv,split=test
+E5_hybrid_rules,original,xgboost / override_high,0.55,8122,8083,0,39,0,1.0,0.9952,0.9976,,0,results/hybrid_rules_results.csv,split=holdout
+E5_hybrid_rules,original,xgboost / or_any,0.55,14186,6718,8,2,7458,0.9988,0.9997,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=val
+E5_hybrid_rules,original,xgboost / or_any,0.55,14029,6425,10,3,7591,0.9984,0.9995,0.999,0.0013,0,results/hybrid_rules_results.csv,split=test
+E5_hybrid_rules,original,xgboost / or_any,0.55,8122,8083,0,39,0,1.0,0.9952,0.9976,,0,results/hybrid_rules_results.csv,split=holdout
+E5_hybrid_rules,original,fusion / base,0.5,14186,6720,3,0,7463,0.9996,1.0,0.9998,0.0004,0,results/hybrid_rules_results.csv,split=val
+E5_hybrid_rules,original,fusion / base,0.5,14029,6427,8,1,7593,0.9988,0.9998,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=test
+E5_hybrid_rules,original,fusion / base,0.5,8122,8098,0,24,0,1.0,0.997,0.9985,,0,results/hybrid_rules_results.csv,split=holdout
+E5_hybrid_rules,original,fusion / override_high,0.5,14186,6720,3,0,7463,0.9996,1.0,0.9998,0.0004,0,results/hybrid_rules_results.csv,split=val; selected policy
+E5_hybrid_rules,original,fusion / override_high,0.5,14029,6427,8,1,7593,0.9988,0.9998,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=test; selected policy
+E5_hybrid_rules,original,fusion / override_high,0.5,8122,8103,0,19,0,1.0,0.9977,0.9988,,0,results/hybrid_rules_results.csv,split=holdout; selected policy
+E5_hybrid_rules,original,fusion / or_any,0.5,14186,6720,3,0,7463,0.9996,1.0,0.9998,0.0004,0,results/hybrid_rules_results.csv,split=val
+E5_hybrid_rules,original,fusion / or_any,0.5,14029,6427,8,1,7593,0.9988,0.9998,0.9993,0.0011,0,results/hybrid_rules_results.csv,split=test
+E5_hybrid_rules,original,fusion / or_any,0.5,8122,8103,0,19,0,1.0,0.9977,0.9988,,0,results/hybrid_rules_results.csv,split=holdout
+E4_heldout_techniques,original,XGBoost (full context),0.55,15723,8033,9,89,7592,0.9989,0.989,0.9939,0.0012,0,results/e4_holdout.csv,combined holdout attacks + test benign
+Robustness_benign_heavy,original,XGBoost (full context),0.5,7677,76,10,0,7591,0.8837,1.0,0.9383,0.0013,0,results/benign_heavy_results.csv,1:100 prevalence; 13.2 FP per 10k benign
+Robustness_benign_heavy,original,XGBoost (full context),0.55,7677,76,9,0,7592,0.8941,1.0,0.9441,0.0012,0,results/benign_heavy_results.csv,1:100 prevalence; 11.8 FP per 10k benign
+Robustness_benign_heavy,original,XGBoost (full context),0.9,7677,75,2,1,7599,0.974,0.9868,0.9804,0.0003,0,results/benign_heavy_results.csv,1:100 prevalence; 2.6 FP per 10k benign
+Robustness_benign_heavy,original,XGBoost (full context),0.99,7677,70,0,6,7601,1.0,0.9211,0.9589,0.0,0,results/benign_heavy_results.csv,1:100 prevalence; 0.0 FP per 10k benign
+VM_external_check,vm,XGBoost (frozen),0.55,32,15,17,0,0,0.4688,1.0,0.6383,1.0,0,results/vm_predictions.csv,external sanity check; not a real-world estimate
+VM_external_check,vm,Rules (frozen E1),,32,5,0,10,17,1.0,0.3333,0.5,0.0,0,results/vm_predictions.csv,external sanity check; not a real-world estimate
+VM_external_check,vm,Hybrid (XGBoost OR high-severity rule),0.55,32,15,17,0,0,0.4688,1.0,0.6383,1.0,0,results/vm_predictions.csv,external sanity check; not a real-world estimate
+E3_feature_ablation,original,name only,0.35,14029,6029,186,399,7415,0.9701,0.9379,0.9537,0.0245,1,results/e3_ablation.csv,derived from reported precision/recall/FPR and split sizes
+E3_feature_ablation,original,name + parent,0.3,14029,6203,186,225,7415,0.9709,0.965,0.9679,0.0245,1,results/e3_ablation.csv,derived from reported precision/recall/FPR and split sizes
+E3_feature_ablation,original,name + parent + cmd,0.25,14029,6428,18,0,7583,0.9972,1.0,0.9986,0.0024,1,results/e3_ablation.csv,derived from reported precision/recall/FPR and split sizes
+E3_feature_ablation,original,full context,0.55,14029,6422,9,6,7592,0.9986,0.9991,0.9988,0.0012,1,results/e3_ablation.csv,derived from reported precision/recall/FPR and split sizes
+E3_feature_ablation,original,full without process name,0.5,14029,6422,9,6,7592,0.9986,0.9991,0.9988,0.0012,1,results/e3_ablation.csv,derived from reported precision/recall/FPR and split sizes
+E2_model_comparison,original,SecureBERT2.0 frozen + logistic,0.2,14029,6428,13,0,7588,0.998,1.0,0.999,0.0017,1,results/e2_comparison.csv,derived from reported metrics and grouped test split sizes

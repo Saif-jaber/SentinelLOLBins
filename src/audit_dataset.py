@@ -1,16 +1,16 @@
 import os
 import pandas as pd
 
-# for finding the directory that contains the path for data 
+# Repository root and raw-data directory.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(BASE, "data", "raw")
 
-# for looking / picking the right file for data whixh is the 10m one
+# Use the full 10m processed-features export and audit a 200k-row prefix.
 big = [f for f in os.listdir(RAW) if "processed_features_10m" in f][0]
 PATH = os.path.join(RAW, big)
 df = pd.read_csv(PATH, nrows=200000)
 
-#checking the values for the dataset to make sure
+# Quick profile of the source file.
 print("=== SHAPE ===")
 print(df.shape)
 
@@ -35,7 +35,7 @@ malicious = df[df["label"] == 1]
 benign_50k = benign.sample(50000, random_state=42)
 malicious_50k = malicious.sample(50000, random_state=42)
 
-# ignore index to not have messy row numbers
+# Reset row numbers after combining the two samples.
 subset = pd.concat([benign_50k, malicious_50k], ignore_index=True)
 
 OUT = os.path.join(PROC_DIR, "sample_100k.parquet")

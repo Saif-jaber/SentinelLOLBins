@@ -1,27 +1,25 @@
-"""Score the adapted Sysmon VM table with the frozen arms (E4 external check).
+"""Score the adapted Sysmon VM table for the external check.
 
-This script is intentionally data-blocked: it refuses to run until
-``data/processed/vm_adapted.parquet`` exists (produced by
-``src/vm_schema_adapter.py`` from Haitham's authorised VM collection). It never
-fabricates VM results.
+The script stops if ``data/processed/vm_adapted.parquet`` is missing, so it
+cannot report VM results without a real collection. The table is produced by
+``src/vm_schema_adapter.py``.
 
-Usage
------
+Usage:
+
     python src/score_vm.py
-    python src/score_vm.py --adapted data/processed/vm_adapted.parquet \
-        --out-dir results
+    python src/score_vm.py --adapted data/processed/vm_adapted.parquet --out-dir results
 
-Outputs (only on a genuine run)
--------------------------------
-    results/vm_predictions.csv        one row per VM event
+Outputs:
+
+    results/vm_predictions.csv        one row per event
     results/vm_scenario_summary.csv   one row per scenario
-    results/vm_summary.json           scenario-level recall / benign FP + caveats
+    results/vm_summary.json           scenario recall, benign FP rate, caveats
 
-The frozen XGBoost threshold comes from results/chosen_threshold.json (0.55).
-Rule evidence uses the same deterministic engine as E1. The reported hybrid is
-``XGBoost OR high-severity rule``; this is the conservative decision policy and
-is labelled as an external check, not as the validation-selected fusion model
-(SecureBERT embeddings are not available for raw VM telemetry unless computed).
+XGBoost uses the saved threshold from ``results/chosen_threshold.json`` (0.55).
+Rules come from the same deterministic engine used for E1. The hybrid result is
+``XGBoost OR high-severity rule``, which is the conservative external-check
+policy. SecureBERT embeddings are not used here because raw Sysmon telemetry
+does not include them.
 """
 
 import argparse

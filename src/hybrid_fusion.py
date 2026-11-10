@@ -7,7 +7,7 @@ import pandas as pd
 import joblib
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 RESULT_DIR = os.path.join(BASE, "results")

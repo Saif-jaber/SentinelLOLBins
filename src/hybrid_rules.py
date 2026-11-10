@@ -1,39 +1,31 @@
-"""Hybrid-with-rules comparison for SentinelLOLBins (RQ3).
+"""Evaluate the hybrid model-plus-rules policies for RQ3.
 
-Combines the frozen ML arms (XGBoost and the weighted XGB+SecureBERT fusion)
-with the deterministic rule evidence produced by Haitham's engine, using a
-decision-level policy chosen on the validation split only.
+The script combines a base model (XGBoost or XGB+SecureBERT fusion) with the
+deterministic rule engine. Policies:
 
-Policies evaluated per frozen base model:
-    base            ML probability >= frozen threshold
-    override_high   base OR a high/critical severity rule matched
-    or_any          base OR any rule matched
+* ``base`` - use the model threshold only.
+* ``override_high`` - model prediction OR a high/critical rule.
+* ``or_any`` - model prediction OR any rule.
 
-Selection protocol
-------------------
-1. Base model: validation F1, then recall, then lower FPR.
-2. Rule policy: validation F1 / recall / FPR. Ties are broken in favour of
-   override_high because this project's aim is interpretable hybrid triage and
-   the policy adds no measured validation cost. The base row is kept as the
-   hybrid-without-rules ablation.
-3. Test and holdout are scored once, after the policy is frozen.
+Selection uses validation only: base model by F1, then recall, then lower FPR;
+rule policy by F1, recall, and FPR. Exact ties go to ``override_high`` because
+it keeps the hybrid explainable and added no measured validation cost. The base
+row remains as the hybrid-without-rules ablation.
 
-Inputs
-------
-data/processed/sample_100k.parquet
-data/splits/{val,test,holdout}.json
-results/models/{preprocessor,xgb_baseline}.joblib
-results/models/{encoder_scaler,encoder_head}.joblib
-data/processed/securebert/{val,test,holdout}_{emb.npy,meta.parquet}
-results/rules_{test,holdout}.csv  (val rules are recomputed deterministically)
-results/chosen_threshold.json
-results/fusion_config.json
+Inputs:
 
-Outputs
--------
-results/hybrid_rules_results.csv
-results/hybrid_rules_ci.csv
-results/hybrid_rules_config.json
+* ``data/processed/sample_100k.parquet``
+* ``data/splits/{val,test,holdout}.json``
+* saved preprocessor, XGBoost, encoder scaler, and encoder head
+* SecureBERT embeddings for validation, test, and holdout
+* ``results/rules_{test,holdout}.csv``; validation rules are recomputed
+* ``results/chosen_threshold.json`` and ``results/fusion_config.json``
+
+Outputs:
+
+* ``results/hybrid_rules_results.csv``
+* ``results/hybrid_rules_ci.csv``
+* ``results/hybrid_rules_config.json``
 """
 
 import argparse
@@ -67,7 +59,7 @@ DROP = [
 
 HIGH_SEVERITIES = {"high", "critical"}
 POLICIES = ["base", "override_high", "or_any"]
-# higher value wins exact ties on validation
+# Higher values win exact ties on validation.
 POLICY_TIEBREAK = {"override_high": 2, "base": 1, "or_any": 0}
 
 
@@ -242,7 +234,7 @@ def main():
     out = pd.DataFrame(rows)
     out.to_csv(os.path.join(args.out_dir, "hybrid_rules_results.csv"), index=False)
 
-    # grouped bootstrap CI for the selected policy on test (same grouping as fusion CI)
+    # Grouped bootstrap CI for the selected policy on test, matching the fusion CI.
     sel = out[(out.base_model == best_base) & (out.policy == selected_policy) & (out.split == "test")].iloc[0]
     cfg = bases[best_base]
     pred = decide(data["test"][cfg["proba"]], cfg["threshold"], data["test"]["ev"], selected_policy)

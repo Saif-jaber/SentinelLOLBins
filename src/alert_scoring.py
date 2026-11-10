@@ -1,33 +1,26 @@
-r"""Fused alert-record contract for SentinelLOLBins (Data & ML handoff).
+r"""Build fused alert records from a Windows process-creation event.
 
-This module is the single entry point that the integration/dashboard workstream
-(Hamdan / Abdalrahman) calls.  It combines the frozen evidence sources into one
-interpretable **alert record**:
+``score_event`` is the shared entry point used by the API and dashboard. It
+combines three pieces of evidence:
 
-    score_event(row) -> dict          # one process-creation event -> one alert
-    score_dataframe(df) -> DataFrame  # batch form
-    AlertScorer                       # reusable loader for the frozen artifacts
+* XGBoost, scored at the saved threshold in ``results/chosen_threshold.json``
+  (0.55), or the validation-selected fusion when ``encoder_proba`` is supplied.
+* The deterministic Sigma-style rules in ``rules/``.
+* An optional SecureBERT probability from the caller.
 
-Evidence sources
-----------------
-1. XGBoost (frozen, ``results/models/xgb_baseline.joblib`` +
-   ``results/models/preprocessor.joblib``) scored at the validation-selected
-   threshold in ``results/chosen_threshold.json`` (0.55).
-2. The deterministic Sigma-style rule engine in ``rules/`` (E1).
-3. Optional SecureBERT probability (``encoder_proba``) when the caller has
-   already computed an embedding.  If supplied, the validation-selected fusion
-   weights in ``results/fusion_config.json`` are used.
+The default decision is ``model OR high-severity rule``. When the model and a
+rule disagree, both results stay in the record and ``review_required`` is set.
 
-Decision policy
----------------
-The conservative deployment policy is **model OR high-severity rule**; it is the
-same policy used for the VM external check (``src/score_vm.py``) and is the
-default here.  Rules are evidence, not ground truth: when a rule and the model
-disagree the record keeps both and sets ``review_required``.
+Hand-typed dashboard events (``manual=True``) are handled separately. They are
+out of distribution for a model trained on synthetic data, so the risk band
+comes from rules and command indicators instead of the raw probability alone.
+A strong indicator or high/critical rule gives ``high``, a weak indicator gives
+``medium``, and no indicator gives ``low``. The raw probability is still kept
+as evidence.
 
-This module never retrains, never mutates the frozen artifacts, never reads
-label / technique / scenario ground-truth columns as features, and never claims
-real-world performance.  Risk is a triage priority, not a verdict of compromise.
+This module does not retrain or modify any saved model. Label, technique, and
+scenario fields are never used as features. Risk is a triage priority, not a
+verdict that an endpoint was compromised.
 """
 
 from __future__ import annotations
@@ -35,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Mapping, Optional
@@ -67,7 +61,7 @@ DISCLAIMER = (
     "EDR replacement and not validated for enterprise deployment."
 )
 
-# The exact alert-record contract sent to the dashboard / API.
+# Fields returned by score_event and the API.
 ALERT_FIELDS = [
     "event_id",
     "record_id",
@@ -101,9 +95,7 @@ ALERT_FIELDS = [
 ]
 
 
-# --------------------------------------------------------------------------- #
-# small helpers
-# --------------------------------------------------------------------------- #
+# Helpers.
 def _row_get(row: Any, key: str, default: Any = None) -> Any:
     if isinstance(row, Mapping):
         return row.get(key, default)
@@ -116,7 +108,7 @@ def _has_key(row: Any, key: str) -> bool:
     if isinstance(row, Mapping):
         return key in row
     try:
-        return key in row.index  # pandas Series
+        return key in row.index  # pandas Series exposes .index.
     except AttributeError:
         return False
 
@@ -124,7 +116,7 @@ def _has_key(row: Any, key: str) -> bool:
 def _as_text(value: Any) -> str:
     if value is None:
         return ""
-    if isinstance(value, float) and value != value:  # NaN
+    if isinstance(value, float) and value != value:  # NaN is not equal to itself.
         return ""
     return str(value).strip()
 
@@ -137,7 +129,7 @@ def _basename_lower(value: Any) -> str:
 
 
 def _native(value: Any) -> Any:
-    """Make numpy scalars / NaN JSON-safe."""
+    """Convert numpy scalars and NaN values to JSON-safe types."""
     if isinstance(value, (np.integer,)):
         return int(value)
     if isinstance(value, (np.floating,)):
@@ -158,7 +150,7 @@ def _opt_float(value: Any) -> Optional[float]:
         out = float(value)
     except (TypeError, ValueError):
         return None
-    if out != out:  # NaN
+    if out != out:  # NaN is not equal to itself.
         return None
     return out
 
@@ -203,9 +195,156 @@ def _risk_score(model_proba: float, severity: Optional[str], context_suspicious:
     return int(max(0, min(100, round(points))))
 
 
-# --------------------------------------------------------------------------- #
-# scorer
-# --------------------------------------------------------------------------- #
+# Manual-event calibration. The saved model learned generator patterns (for
+# example, almost every notepad/whoami template is malicious), so hand-typed
+# benign commands are out of distribution. Manual events therefore use rules and
+# indicators: strong or high/critical rule -> high; weak -> medium; none -> low.
+# The raw probability stays in the record but does not set the band by itself.
+MANUAL_HIGH_RISK_PROCESSES = frozenset({
+    "mshta.exe", "rundll32.exe", "regsvr32.exe", "certutil.exe",
+    "bitsadmin.exe", "wmic.exe", "msbuild.exe", "cmstp.exe", "psexec.exe",
+    "wscript.exe", "cscript.exe", "installutil.exe", "regasm.exe",
+    "regsvcs.exe", "hh.exe", "pcalua.exe", "forfiles.exe",
+})
+MANUAL_STRONG_FLAGS = (
+    "flag_enc", "flag_hidden_window", "flag_iex", "flag_downloadstring",
+    "flag_invoke_expression", "flag_frombase64", "flag_regsvr32_script",
+    "flag_mshta", "flag_certutil_urlcache", "flag_bitsadmin",
+    "flag_schtasks_remote", "flag_wmic_remote", "flag_cmstp", "flag_mimikatz",
+)
+MANUAL_WEAK_FLAGS = ("flag_nop", "flag_ep_bypass")
+
+_MANUAL_URL = re.compile(r"(?i)(?:https?|ftp)://[^\s\"'<>]+")
+_MANUAL_UNC = re.compile(r"(?<![A-Za-z0-9])\\\\[^\s\"']+")
+_MANUAL_B64 = re.compile(r"(?i)\b[a-z0-9+/]{32,}={0,2}\b")
+_MANUAL_URI = re.compile(r"(?i)\b(?:javascript|vbscript|script):")
+_MANUAL_PATH = re.compile(r"(?i)[a-z]:\\")
+_MANUAL_SCRIPT = re.compile(
+    r"(?i)\.(hta|jse?|vbe?|wsf|ps1|bat|cmd|scr|pif|lnk|sct|inf|dll|csproj|iso|img)\b")
+_MANUAL_ACCOUNT_ADD = re.compile(
+    r"(?i)\bnet(?:\.exe)?\s+(?:user|localgroup)\b[^\n]*(?:^|\s)/add\b")
+_MANUAL_RECON = re.compile(
+    r"(?i)\b(?:nltest|quser)\b|whoami\s+/(?:all|priv)\b|"
+    r"net(?:\.exe)?\s+(?:group|localgroup|view)\b")
+_MANUAL_RUN_KEY = re.compile(r"(?i)reg(?:\.exe)?\s+add\b[^\n]*\\run\b")
+_MANUAL_SERVICE = re.compile(r"(?i)sc(?:\.exe)?\s+(?:create|config)\b")
+_MANUAL_SCRIPT_EXEC = re.compile(r"(?i)\s-(?:file|f)\b")
+
+
+def _stem(name: Any) -> str:
+    text = str(name or "").strip().lower()
+    return text[:-4] if text.endswith(".exe") else text
+
+
+_MANUAL_HIGH_RISK_STEMS = frozenset(_stem(p) for p in MANUAL_HIGH_RISK_PROCESSES)
+
+
+def _manual_effective_process(ctx: Dict[str, str]) -> str:
+    """Process to triage on: the executable named in the command line when
+    present, otherwise the declared process field. The command line wins so a
+    normal command is not escalated by an unrelated process/parent field."""
+    declared = (ctx.get("process_name") or "").strip().lower()
+    command = (ctx.get("command_line") or "").strip().lstrip('"')
+    token = command.split()[0] if command.split() else ""
+    token = token.replace("/", "\\").rstrip("\"',;")
+    base = token.rsplit("\\", 1)[-1].lower()
+    exe_like = bool(re.search(
+        r"(?i)\.(exe|com|bat|cmd|ps1|vbs|jse?|hta|msi|scr|pif)$", base))
+    if exe_like:
+        return base
+    if _stem(base) in _MANUAL_HIGH_RISK_STEMS:
+        return base
+    if base and declared and _stem(base) == _stem(declared):
+        return declared
+    return declared
+
+
+def _manual_triage(
+    row: Any, ctx: Dict[str, str], severity: Optional[str]
+) -> "tuple[List[str], List[str]]":
+    """Return (strong, weak) human-readable indicators for a manual event."""
+    strong: List[str] = []
+    weak: List[str] = []
+    command = ctx.get("command_line") or ""
+    proc = _stem(_manual_effective_process(ctx))
+    high_risk = proc in _MANUAL_HIGH_RISK_STEMS
+    has_path = bool(_MANUAL_PATH.search(command))
+    has_url = bool(_MANUAL_URL.search(command))
+
+    for column in MANUAL_STRONG_FLAGS:
+        if _row_get(row, column, 0) in (1, True):
+            strong.append(column)
+    for column in MANUAL_WEAK_FLAGS:
+        if _row_get(row, column, 0) in (1, True):
+            weak.append(column)
+
+    if _MANUAL_URI.search(command):
+        strong.append("javascript/vbscript URI")
+    if _MANUAL_UNC.search(command):
+        strong.append("UNC/remote path")
+    if _MANUAL_ACCOUNT_ADD.search(command):
+        strong.append("account creation/modification")
+    if _MANUAL_RUN_KEY.search(command):
+        strong.append("autorun registry persistence")
+    if _MANUAL_RECON.search(command):
+        weak.append("recon command")
+    if _MANUAL_SERVICE.search(command):
+        weak.append("service manipulation")
+    if _MANUAL_SCRIPT.search(command) and _MANUAL_SCRIPT_EXEC.search(command):
+        evasion = any(
+            _row_get(row, flag, 0) in (1, True)
+            for flag in ("flag_ep_bypass", "flag_nop", "flag_hidden_window")
+        )
+        if evasion:
+            strong.append("script file execution with evasion flags")
+        else:
+            weak.append("script file execution")
+    if has_url:
+        if high_risk or "flag_iex" in strong or "flag_downloadstring" in strong:
+            strong.append("remote URL")
+        else:
+            weak.append("URL in command")
+    if _MANUAL_B64.search(command) and "flag_enc" not in strong:
+        weak.append("long base64-like token")
+
+    if high_risk:
+        if has_path or _MANUAL_SCRIPT.search(command):
+            strong.append("high-risk process with file path")
+        else:
+            weak.append("high-risk process")
+
+    # process-specific abuse patterns (argument shape)
+    if proc in {"rundll32", "regsvr32"} and has_path:
+        strong.append("DLL/script proxy execution")
+    if proc in {"cscript", "wscript", "mshta"} and _MANUAL_SCRIPT.search(command):
+        strong.append("script host executing a script file")
+    if proc == "msbuild" and has_path:
+        strong.append("msbuild project execution")
+    if proc == "certutil" and re.search(r"(?i)-(?:decode|encode|urlcache)\b", command):
+        strong.append("certutil encode/decode")
+    if proc == "wmic" and re.search(r"(?i)process\s+call\s+create|/node:", command):
+        strong.append("remote process creation")
+    if proc == "schtasks" and re.search(r"(?i)/create\b", command):
+        if re.search(r"(?i)/create\b[^\n]*(?:powershell|cmd|http|\\\\|-enc\b)",
+                     command):
+            strong.append("scheduled task launch")
+        else:
+            weak.append("scheduled task creation")
+
+    # parent context alone is only weak; a malicious command still scores high
+    # from its own indicators.
+    if _row_get(row, "parent_child_suspicious", 0) in (1, True):
+        weak.append("office/script parent -> shell")
+    if (severity or "").lower() in {"medium"}:
+        weak.append(f"rule severity {severity}")
+
+    # de-duplicate while preserving order
+    strong = list(dict.fromkeys(strong))
+    weak = [w for w in dict.fromkeys(weak) if w not in strong]
+    return strong, weak
+
+
+# Scorer.
 class AlertScorer:
     """Loads the frozen artifacts once and produces alert records."""
 
@@ -225,7 +364,7 @@ class AlertScorer:
         self._threshold: Optional[float] = None
         self._fusion: Optional[Dict[str, float]] = None
 
-    # -- lazy loading so rule-only use does not need the model ------------- #
+    # Load the model only when it is needed, so rule-only use still works.
     def _ensure_model(self) -> None:
         if self._model is not None:
             return
@@ -286,6 +425,7 @@ class AlertScorer:
         xgb_proba: Optional[float] = None,
         encoder_proba: Optional[float] = None,
         scored_at: Optional[str] = None,
+        manual: bool = False,
     ) -> Dict[str, Any]:
         ctx = _command_context(row)
 
@@ -317,15 +457,36 @@ class AlertScorer:
                 attack_ids.append(aid)
         rule_high = (severity or "").lower() in HIGH_SEVERITIES
 
-        hybrid = int(bool(model_pred) or bool(rule_high))
+        raw_model_pred = int(model_pred)
+        manual_band: Optional[str] = None
+        if manual:
+            strong, weak = _manual_triage(row, ctx, severity)
+            if rule_high or strong:
+                hybrid = 1
+                manual_band = "high"
+            elif weak:
+                hybrid = 1
+                manual_band = "medium"
+            else:
+                hybrid = 0
+                manual_band = "low"
+            suppressed = bool(raw_model_pred) and not hybrid
+        else:
+            strong, weak = [], []
+            hybrid = int(bool(raw_model_pred) or bool(rule_high))
+            suppressed = False
         decision = "malicious" if hybrid else "benign"
-        risk = _risk_band(model_proba, severity, bool(hybrid))
         context_suspicious = bool(_row_get(row, "parent_child_suspicious", 0) in (1, True))
-        risk_score = _risk_score(model_proba, severity, context_suspicious)
+        if manual:
+            risk = manual_band
+            risk_score = {"high": 90, "medium": 60, "low": 15}[manual_band]
+        else:
+            risk = _risk_band(model_proba, severity, bool(hybrid))
+            risk_score = _risk_score(model_proba, severity, context_suspicious)
 
         rule_matched = bool(rule.get("matched_any"))
-        review_required = bool(rule_matched != bool(model_pred)) or (
-            not ctx["parent_process"]
+        review_required = bool(rule_matched != bool(raw_model_pred)) or (
+            suppressed or not ctx["parent_process"]
         )
 
         evidence: List[str] = []
@@ -333,6 +494,25 @@ class AlertScorer:
             f"{fn} probability {model_proba:.3f} "
             f"(threshold {model_threshold:.2f}) -> model_pred={model_pred}"
         )
+        if manual:
+            evidence.append(
+                "manual calibration: hand-typed events are out-of-distribution for "
+                "the frozen model, so the band uses transparent rules+indicator triage"
+            )
+            if strong:
+                evidence.append("manual triage strong indicator(s): " + ", ".join(strong))
+            if weak:
+                evidence.append("manual triage weak indicator(s): " + ", ".join(weak))
+            if not strong and not weak:
+                evidence.append(
+                    "manual triage: no rule or concrete indicator; the raw model "
+                    "score is retained as evidence but does not set the band"
+                )
+            if suppressed:
+                evidence.append(
+                    f"manual triage: raw model alert (proba {model_proba:.3f}) was "
+                    f"not corroborated; banded {manual_band} and kept for review"
+                )
         if p_enc is not None:
             evidence.append(f"SecureBERT probability {p_enc:.3f} (frozen encoder head)")
         if rule_matched:
@@ -388,7 +568,8 @@ class AlertScorer:
                 "threshold": round(float(model_threshold), 6),
                 "rule_engine": "rules/ (deterministic Sigma-style)",
             },
-            "scoring_policy": self.policy,
+            "scoring_policy": f"{self.policy}+manual_calibration" if manual
+            else self.policy,
             "disclaimer": DISCLAIMER,
         }
         return {key: _native(alert[key]) for key in ALERT_FIELDS}
@@ -429,9 +610,7 @@ class AlertScorer:
         return out.reset_index(drop=True)
 
 
-# --------------------------------------------------------------------------- #
-# module-level contract (the shared score_event(row) -> alert)
-# --------------------------------------------------------------------------- #
+# Module-level contract used by the API and dashboard.
 _DEFAULT_SCORER: Optional[AlertScorer] = None
 
 
@@ -447,15 +626,19 @@ def score_event(
     xgb_proba: Optional[float] = None,
     encoder_proba: Optional[float] = None,
     scorer: Optional[AlertScorer] = None,
+    manual: bool = False,
 ) -> Dict[str, Any]:
     """Contract used by the API/dashboard: one event -> one alert record.
 
     ``row`` may be a dict / pandas Series carrying either the 57 model-input
     columns (XGBoost is run automatically) or a precomputed probability via
     ``xgb_proba``.  The returned dict always has exactly ``ALERT_FIELDS`` keys.
+
+    ``manual=True`` applies the out-of-distribution calibration for hand-typed
+    events (rules-first triage; model-only alerts need a concrete indicator).
     """
     return (scorer or get_default_scorer()).score(
-        row, xgb_proba=xgb_proba, encoder_proba=encoder_proba
+        row, xgb_proba=xgb_proba, encoder_proba=encoder_proba, manual=manual
     )
 
 
@@ -476,9 +659,7 @@ def score_dataframe(
     )
 
 
-# --------------------------------------------------------------------------- #
-# CLI
-# --------------------------------------------------------------------------- #
+# CLI.
 def _load_input(path: str) -> pd.DataFrame:
     if not os.path.exists(path):
         raise SystemExit(f"input not found: {path}")

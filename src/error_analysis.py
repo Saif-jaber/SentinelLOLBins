@@ -7,7 +7,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.metrics import precision_recall_curve, average_precision_score, confusion_matrix
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 SPLITS = os.path.join(BASE, "data", "splits")
@@ -15,7 +15,7 @@ MODEL_DIR = os.path.join(BASE, "results", "models")
 RESULT_DIR = os.path.join(BASE, "results")
 FIG_DIR = os.path.join(RESULT_DIR, "figures")
 
-# using the same id loader so the rows match the xgb file
+# Use the same ID loader so rows match the XGBoost output.
 def load_ids(name):
     with open(os.path.join(SPLITS, f"{name}.json")) as f:
         return set(json.load(f)["record_ids"])
@@ -26,23 +26,23 @@ raw = pd.read_parquet(os.path.join(PROC, "sample_100k.parquet"))
 test = raw[raw["record_id"].isin(test_ids)].reset_index(drop=True)
 mat = pd.read_parquet(os.path.join(PROC, "xgb_test.parquet"))
 
-# making sure rows line up before trusting the join
+# Check alignment before trusting the join.
 assert (test["label"].values == mat["label"].values).all(), "rows are not aligned"
 
 model = joblib.load(os.path.join(MODEL_DIR, "xgb_baseline.joblib"))
 proba = model.predict_proba(mat.drop(columns=["label"]))[:, 1]
 
-THRESHOLD = 0.5  # fallback only
+THRESHOLD = 0.5  # Fallback when the saved threshold is unavailable.
 thr_path = os.path.join(RESULT_DIR, "chosen_threshold.json")
 if os.path.exists(thr_path):
-    THRESHOLD = json.load(open(thr_path))["threshold"]  # selected on val, never test
+    THRESHOLD = json.load(open(thr_path))["threshold"]  # Selected on validation, never on test.
 
 pred = (proba >= THRESHOLD).astype(int)
 
 tn, fp, fn, tp = confusion_matrix(test["label"], pred).ravel()
 print(f"tn={tn} fp={fp} fn={fn} tp={tp}")
 
-# table of every test event with its outcome to look at mistakes
+# Per-event test outcomes, used to inspect mistakes.
 events = pd.DataFrame({
     "record_id": test["record_id"],
     "process_name": test["process_name"],
@@ -72,7 +72,7 @@ show("false alarms (benign flagged, most confident first)",
 show("missed attacks (malicious passed, most confident benign first)",
      events[events.outcome == "FN"].sort_values("proba"))
 
-# checking which techniques got missed
+# Check which techniques were missed.
 if fn > 0:
     print("\nmissed techniques:")
     print(events[events.outcome == "FN"]["mitre_technique"].value_counts().to_string())
@@ -81,7 +81,7 @@ os.makedirs(RESULT_DIR, exist_ok=True)
 events.to_csv(os.path.join(RESULT_DIR, "test_event_outcomes.csv"), index=False)
 print("\nsaved results/test_event_outcomes.csv")
 
-# precision recall curve since the report asks for it in 4.1
+# Precision-recall curve for the report.
 prec, rec, thr = precision_recall_curve(test["label"], proba)
 ap = average_precision_score(test["label"], proba)
 

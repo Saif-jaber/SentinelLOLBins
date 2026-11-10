@@ -67,9 +67,7 @@ _rules_cache: Optional[list] = None
 _rules_cache_dir: Optional[str] = None
 
 
-# --------------------------------------------------------------------------- #
-# helpers
-# --------------------------------------------------------------------------- #
+# Helpers.
 def _as_text(value: Any) -> str:
     """Coerce an event field to a stripped string; NaN / None become ''."""
     if value is None:
@@ -101,9 +99,7 @@ def _get_pattern(pattern: str) -> "re.Pattern":
     return _pattern_cache[key]
 
 
-# --------------------------------------------------------------------------- #
-# condition evaluation
-# --------------------------------------------------------------------------- #
+# Condition evaluation.
 def _eval_leaf(key: str, value: Any, ctx: Dict[str, str]) -> bool:
     if key == "process_is":
         names = {str(n).strip().lower() for n in _as_list(value) if str(n).strip()}
@@ -183,9 +179,7 @@ def _rule_matches(rule: Dict[str, Any], ctx: Dict[str, str]) -> bool:
     return any(_eval_condition(c, ctx) for c in cond_nodes)
 
 
-# --------------------------------------------------------------------------- #
-# rule loading / validation
-# --------------------------------------------------------------------------- #
+# Rule loading and validation.
 def _validate_rule(rule: Any) -> None:
     if not isinstance(rule, dict):
         raise ValueError("each rule must be a mapping")
@@ -233,9 +227,7 @@ def reset_rules_cache() -> None:
     _rules_cache_dir = None
 
 
-# --------------------------------------------------------------------------- #
-# scoring
-# --------------------------------------------------------------------------- #
+# Scoring.
 def score_event(row: Any) -> Dict[str, Any]:
     """Score one process-creation event.
 
@@ -316,7 +308,7 @@ def score_dataframe(df) -> pd.DataFrame:
             "severity_max": res["severity_max"],
         })
     out = pd.DataFrame(records, columns=OUTPUT_COLUMNS)
-    # normalize severity_max to str | None (pandas may coerce None -> NaN)
+    # Keep severity_max as str | None; pandas may turn None into NaN.
     sev_values = [
         None if (v is None or (isinstance(v, float) and v != v)) else str(v)
         for v in out["severity_max"].tolist()

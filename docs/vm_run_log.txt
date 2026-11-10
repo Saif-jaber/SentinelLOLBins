@@ -153,16 +153,17 @@ Adapter run (host side)
   (C:\LabTransfer\pydeps306) via PYTHONPATH. This is a host tooling workaround
   only; it does not affect the collected data.
 
-Hand-off to Saif (Data & ML)
-  Ready: data/processed/vm_adapted.parquet, data/processed/vm_adapted.csv,
-  docs/vm_missing_fields.txt.
-  Blocked: results/models/preprocessor.joblib and results/models/xgboost_baseline.joblib
-  are not present in this checkout, so src/score_vm.py cannot run yet. No VM
-  scoring numbers have been produced or invented. Saif should place the frozen
-  model files in results/models/ and run:
+Scoring hand-off (completed 2026-11-08)
+  The adapter outputs (data/processed/vm_adapted.parquet,
+  data/processed/vm_adapted.csv, docs/vm_missing_fields.txt) were handed to
+  Data & ML. The saved model files (results/models/preprocessor.joblib and
+  results/models/xgb_baseline.joblib) were then available, and the scoring run
+  was completed:
     python src/score_vm.py --adapted data/processed/vm_adapted.parquet --out-dir results
-  Expected outputs: results/vm_predictions.csv, results/vm_scenario_summary.csv,
-  results/vm_summary.json.
+  Outputs: results/vm_predictions.csv, results/vm_scenario_summary.csv,
+  results/vm_summary.json. Results are summarised in docs/vm_results_summary.md.
+  At collection time the model files were not present in this checkout, and no
+  VM scoring numbers were produced or invented during collection.
 
 Rollback
   Rolled back to snapshot: clean-pre-sysmon (UUID ffafe38f-c841-435e-9db7-edb23fff4012)

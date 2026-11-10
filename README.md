@@ -1,110 +1,113 @@
 # SentinelLOLBins
-### Behavioural Machine-Learning Detection of Living-off-the-Land (LOLBins) Abuse
 
-**Course:** CSCY413 - Special Topics in Cybersecurity  
-**Deliverable:** Deliverable 1 - Introduction, Literature Review and Methodology  
-**Project status:** Initialisation and methodology planning
+Behavioural machine-learning detection of Living-off-the-Land Binary (LOLBin) abuse.
 
-## 1. Project Overview
+**Course:** CSCY413 - Special Topics in Cybersecurity
+**Deliverables:** Deliverable 1 (written report, not included here) and Deliverable 2 (implementation, evaluation and evidence)
+**Status:** Implementation and evaluation complete
 
-SentinelLOLBins is a proposed cybersecurity detection prototype that investigates the detection of potentially malicious use of legitimate Windows utilities, known as Living-off-the-Land Binaries (LOLBins).
+## 1. Overview
 
-The project will explore a hybrid detection approach combining transparent Sigma-style rules, machine-learning classification, command-line analysis, and process context. The objective is to investigate whether combining these methods improves the identification of suspicious activity compared with individual detection approaches.
+SentinelLOLBins is a prototype for detecting malicious use of legitimate Windows utilities. It combines deterministic Sigma-style rules, XGBoost, a SecureBERT command-line branch, and process context, then presents the result as an alert record that an analyst can review.
 
-The system is intended to support security analyst triage and experimentation. It is not intended to replace an operational endpoint detection and response system or independently confirm that an attack has occurred.
+The aim was to see whether combining these methods gives better triage evidence than any single method. The dashboard and API are demonstration tools; neither replaces an EDR product nor proves that an attack occurred.
 
-## 2. Project Objectives
+## 2. Objectives
 
-- Investigate behavioural detection of LOLBin abuse.
-- Compare Sigma-style rule detection, XGBoost, and a cybersecurity-pretrained SecureBERT model.
-- Evaluate the contribution of command-line arguments and parent-process context.
-- Investigate a hybrid approach that combines model predictions, rule evidence, and contextual information.
-- Evaluate performance using precision, recall, F1-score, false-positive rate, and other appropriate metrics.
-- Explore independent validation using authorised Windows Sysmon telemetry.
-- Provide interpretable alert records and a lightweight demonstration dashboard.
+- Study behavioural detection of LOLBin abuse.
+- Compare Sigma-style rules, XGBoost, and a SecureBERT model pre-trained on cybersecurity text.
+- Measure the contribution of command-line content and parent-process context.
+- Test a hybrid policy that combines model output, rule evidence, and context.
+- Evaluate performance with precision, recall, F1, false-positive rate, and related metrics.
+- Run an independent check on authorised Windows Sysmon telemetry.
+- Produce interpretable alerts and a small analyst dashboard.
 
-## 3. Proposed Dataset
+## 3. Dataset
 
 **Dataset:** WinLOLBIN-GT, version 1.0.1
+**DOI:** https://doi.org/10.5281/zenodo.20533434
 
-**Dataset DOI:** https://doi.org/10.5281/zenodo.20533434
+The dataset contains labelled Windows process-creation records. Before modelling, we checked its schema, labels, feature definitions, licence, and possible leakage. The results are in `docs/dataset_audit.md`.
 
-The dataset is proposed for evaluating detection methods using labelled Windows process-creation records. Dataset structure, labels, feature definitions, licence conditions, and potential data leakage will be checked before model development.
+## 4. Technologies
 
-## 4. Proposed Technologies
-
-- Python
-- pandas and scikit-learn
+- Python, pandas, and scikit-learn
 - XGBoost
-- Hugging Face Transformers
-- SecureBERT 2.0, subject to compatibility and resource availability
-- Sigma-style detection rules
-- MITRE ATT&CK
+- Hugging Face Transformers with SecureBERT 2.0 (`cisco-ai/SecureBERT2.0-base`)
+- Sigma-style detection rules and MITRE ATT&CK
 - Windows Sysmon
-- Flask or FastAPI for a proposed API
-- HTML, CSS, and JavaScript for a proposed dashboard
-- Git and GitHub for version control and task management
+- FastAPI for the scoring API (`api/main.py`)
+- Streamlit for the analyst dashboard (`dashboard/app.py`)
+- Git and GitHub for version control and task tracking
 
-## 5. Proposed Methodology
+## 5. Methodology
 
-1. Audit the dataset and verify its labels and features.
+1. Audit the dataset and verify labels and features.
 2. Preprocess command-line and process-context data.
-3. Establish baseline detection methods.
-4. Compare rule-based detection, XGBoost, and a pretrained cybersecurity encoder.
-5. Investigate the contribution of process context and hybrid evidence.
-6. Evaluate models using held-out data and suitable metrics.
-7. Conduct independent validation in an authorised, isolated Windows virtual machine, subject to feasibility.
-8. Integrate selected outputs into a demonstration dashboard.
+3. Build baseline detectors.
+4. Compare rules, XGBoost, and the pre-trained encoder.
+5. Test process context and hybrid evidence.
+6. Evaluate on held-out data.
+7. Validate on an authorised, isolated Windows VM.
+8. Expose the selected outputs through the dashboard and API.
 
-These are planned activities. Results will be documented after implementation and evaluation.
+All eight steps were implemented for the evaluated prototype. Results are in `results/`, and the current state is summarised in section 11.
 
-## 6. Evaluation Plan
+## 6. Evaluation
 
-Planned metrics include precision, recall, F1-score, false-positive rate, confusion matrices, precision-recall curves, and inference latency where applicable.
+The evaluation covers precision, recall, F1, false-positive rate, confusion matrices, precision-recall curves, and inference latency. It also looks at class imbalance, a benign-heavy test set, possible dataset leakage, and performance on techniques withheld from training.
 
-Evaluation considers class imbalance, benign-heavy test data, possible dataset leakage, and performance on withheld scenarios. Measured results are consolidated in `results/master_results.csv` and `results/master_results.json`.
+The consolidated results are in `results/master_results.csv` and `results/master_results.json`.
 
-## 7. Ethical and Legal Considerations
+## 7. Ethics and legal considerations
 
-Testing will be restricted to systems and environments for which the team has authorisation. Proposed Windows experiments will use an isolated virtual machine and controlled test scenarios. The team will avoid unauthorised access, production-system testing, and unnecessary collection of sensitive information. Dataset usage and attribution will follow the applicable licence.
+Testing was limited to systems and environments for which the team had permission. Windows experiments used an isolated virtual machine and harmless test scenarios. No production system was touched, no unauthorised access was attempted, and no unnecessary sensitive data was collected. Dataset use follows the published licence.
 
-## 8. Repository Structure
+## 8. Repository structure
 
-- `docs/` - project report and documentation
-- `data/` - dataset documentation and manifests; raw datasets are not committed by default
-- `src/` - planned source code
-- `rules/` - planned detection rules
-- `tests/` - planned tests
-- `notebooks/` - planned exploratory analysis
-- `results/` - planned evaluation outputs
-- `dashboard/` - planned user interface
-- `README.md` - project overview and setup information
+- `docs/` - dataset audit, alert schema, VM records, reproducibility notes, evidence index
+- `data/` - processed sample, split manifests, adapted VM table; raw data is not committed
+- `src/` - preprocessing, models, experiments, alert scoring, artifact export
+- `rules/` - Sigma-style rule definitions and the E1 runner
+- `tests/` - alert contract, API, and VM adapter tests
+- `results/` - metric tables, model artifacts, alert records, figures
+- `dashboard/` - Streamlit analyst dashboard
+- `api/` - FastAPI `POST /score` wrapper around `score_event`
+- `scripts/` - authorised Sysmon collection tooling and benign lab files
 
-## 9. Team and Project Management
+## 9. Team and project management
 
-The team will allocate responsibilities across research and reporting, data and pretrained machine learning, rules and Windows validation, and integration and quality assurance. Final assignments will be confirmed by the team and instructor.
+Workstreams follow Table 2 of the report: research and report (Yehya), data and pre-trained ML (Saif), rules and Windows validation (Haitham), integration and quality (Hamdan), and dashboard/UI (Abdalrahman). Per-member GitHub issue boards are open (#2 Saif, #3 Abdalrahman, #4 Haitham, #5 Hamdan). `docs/issues.md` is the local copy of the task list and its completion state.
 
-GitHub Issues or Projects will be used to track tasks, assign owners, record progress, and coordinate the Weeks 4–8 development schedule.
+## 10. Running the prototype
 
-## 10. Current Status
+```powershell
+# Dashboard
+streamlit run dashboard/app.py
 
-**Deliverable 1:** Introduction, literature review, and methodology planning.
+# Scoring API: POST /score, GET /health, GET /schema
+uvicorn api.main:app --port 8000
 
-Dataset audit, 100k sample, group-aware splits, XGBoost, SecureBERT 2.0, fusion,
-E3 ablation, E4 held-out-technique evaluation, benign-heavy testing and error
-analysis are complete. The deterministic rules baseline (E1) and the
-hybrid-with-rules comparison (E5) are also complete; see `results/master_results.csv`.
+# Tests
+python -m pytest tests rules/tests -q
+```
 
-**VM collection is complete; VM scoring is not.** Instructor authorisation was
-given on 30/10/2026 and an isolated Sysmon run on 2026-11-06 produced 32 Event
-ID 1 rows across 20 scenarios (12 benign, 8 attack). `data/processed/vm_adapted.parquet`
-and `docs/vm_missing_fields.txt` exist; the VM was rolled back to its clean
-snapshot. No VM detection metrics exist yet because `src/score_vm.py` needs the
-frozen `results/models/*.joblib` files from Saif. Report this as a limited
-external check, not as completed validation or a real-world estimate.
-Dashboard/API integration remains future work.
+## 11. Current status
 
-## 11. References and Resources
+**Deliverable 1:** introduction, literature review, and methodology are in the report, which is outside this repository.
+
+The evaluated prototype is complete:
+
+- Dataset audit, 100k working sample, group-aware splits, and leakage control.
+- XGBoost baseline, SecureBERT 2.0 branch, and validation-selected fusion.
+- E1 rules, E2 model comparison, E3 context ablation, E4 held-out techniques, E5 hybrid-with-rules, benign-heavy testing, grouped confidence intervals, latency, and error analysis. Source: `results/master_results.csv`.
+- Alert-record contract (`score_event`), Streamlit dashboard, and FastAPI `POST /score`.
+- **VM external check complete:** authorisation was granted on 30/10/2026, and Sysmon collection took place on 2026-11-06. The clean set contains 32 Event ID 1 rows across 20 scenarios (12 benign, 8 attack). The adapted table is committed, and the results are in `results/vm_*` and `docs/vm_results_summary.md`. The VM was rolled back and the rollback verified. This is a small external check, not a benchmark.
+- Deliverable-2 evidence is indexed in `docs/artifact_index.md`. Seeds and dependency versions are recorded in `docs/reproducibility.md` and `requirements-lock.txt`.
+
+Known limitations: the VM sample is very small, and the XGBoost model flagged every VM event because 14 features are unavailable in raw Sysmon and the feature distribution differs from training. The rules are high-precision but low-recall evidence. Encoder-run package versions were not captured. The synthetic data is parametric, so grouping reduces template leakage but does not remove it. The manual dashboard scorer is an out-of-distribution triage aid and is not part of the offline evaluation.
+
+## 12. References
 
 - WinLOLBIN-GT dataset: https://doi.org/10.5281/zenodo.20533434
 - MITRE ATT&CK: https://attack.mitre.org/

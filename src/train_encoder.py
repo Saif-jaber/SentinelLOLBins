@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 
-#path stuff
+# Repository paths.
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROC = os.path.join(BASE, "data", "processed")
 RESULT_DIR = os.path.join(BASE, "results")
@@ -49,7 +49,7 @@ ytr, yva = mtr["label"].values, mva["label"].values
 yte, yho = mte["label"].values, mho["label"].values
 print("shapes:", Xtr.shape, Xva.shape, Xte.shape, Xho.shape)
 
-# scale fit on train only
+# Fit the scaler on train only.
 scaler = StandardScaler().fit(Xtr)
 Ztr, Zva = scaler.transform(Xtr), scaler.transform(Xva)
 Zte, Zho = scaler.transform(Xte), scaler.transform(Xho)
@@ -71,7 +71,7 @@ def choose_threshold(proba, y):
             best_t, best_f1 = t, f1
     return best_t
 
-# small C grid chosen on validation F1 only
+# Small C grid, selected on validation F1.
 best = None
 for C in [0.1, 1.0, 10.0]:
     clf = LogisticRegression(C=C, max_iter=2000, solver="lbfgs")
@@ -86,7 +86,7 @@ for C in [0.1, 1.0, 10.0]:
 val_f1, CHOSEN_C, CHOSEN_T, clf = best
 print("chosen C:", CHOSEN_C, "| threshold:", CHOSEN_T)
 
-# persist the head for fusion / score_event
+# Save the scaler and classifier head for fusion and scoring.
 MODEL_DIR = os.path.join(BASE, "results", "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 joblib.dump(scaler, os.path.join(MODEL_DIR, f"{args.prefix}encoder_scaler.joblib"))
@@ -100,7 +100,7 @@ p_ho = clf.predict_proba(Zho)[:, 1]
 pred_ho = (p_ho >= CHOSEN_T).astype(int)
 ho_recall = recall_score(yho, pred_ho, zero_division=0)
 
-# benign FPR for E4 uses test benign events only
+# Benign FPR for E4 uses test benign events only.
 ben_mask = yte == 0
 ben_fpr = pred_te[ben_mask].mean()
 
@@ -120,7 +120,7 @@ row = {
 pd.DataFrame([row]).to_csv(os.path.join(RESULT_DIR, f"{args.prefix}e2_encoder.csv"), index=False)
 print(row)
 
-# grouped bootstrap CI on test
+# Grouped bootstrap confidence intervals on the test set.
 group_ids = mte["cmd_normalized"].values
 groups = {}
 for i, g in enumerate(group_ids):
@@ -148,7 +148,7 @@ ci = pd.DataFrame([{
 ci.to_csv(os.path.join(RESULT_DIR, f"{args.prefix}ci_encoder.csv"), index=False)
 print(ci.to_string(index=False))
 
-# E2 comparison table: XGBoost vs encoder
+# E2 comparison table: XGBoost vs the encoder.
 xgb = pd.read_csv(args.xgb_results).iloc[0]
 comp = pd.DataFrame([
     {"model": args.xgb_model_name, "threshold": xgb["threshold"],
