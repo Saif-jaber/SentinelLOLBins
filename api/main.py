@@ -52,6 +52,23 @@ def _is_missing(value: Any) -> bool:
     return value is None or (isinstance(value, float) and math.isnan(value))
 
 
+def _parse_proba(name: str, value: Any) -> Optional[float]:
+    """Convert an optional probability and reject invalid values."""
+    if value is None:
+        return None
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(
+            status_code=400, detail=f"{name} must be numeric or null"
+        ) from exc
+    if not math.isfinite(parsed) or not 0.0 <= parsed <= 1.0:
+        raise HTTPException(
+            status_code=400, detail=f"{name} must be a finite value in [0, 1]"
+        )
+    return parsed
+
+
 def _manual_row(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Build model inputs for a hand-typed event missing the 57-column row.
 
@@ -123,13 +140,8 @@ def score(payload: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
         xgb_proba = payload.pop("xgb_proba", None)
         encoder_proba = payload.pop("encoder_proba", None)
         manual = bool(payload.pop("manual", False))
-        if xgb_proba is not None:
-            try:
-                xgb_proba = float(xgb_proba)
-            except (TypeError, ValueError) as exc:
-                raise HTTPException(
-                    status_code=400, detail="xgb_proba must be numeric or null"
-                ) from exc
+        xgb_proba = _parse_proba("xgb_proba", xgb_proba)
+        encoder_proba = _parse_proba("encoder_proba", encoder_proba)
         if manual and xgb_proba is None:
             payload = _manual_row(payload)
         return score_event(

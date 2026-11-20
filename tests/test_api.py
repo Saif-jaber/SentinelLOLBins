@@ -82,6 +82,62 @@ class TestScoringApi(unittest.TestCase):
         response = self.client.post("/score", json={"manual": True, "xgb_proba": "x"})
         self.assertEqual(response.status_code, 400)
 
+    def test_bad_encoder_proba_is_rejected(self):
+        response = self.client.post(
+            "/score",
+            json=event(encoder_proba="x"),
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_probability_below_range_is_rejected(self):
+        for name in ("xgb_proba", "encoder_proba"):
+            with self.subTest(name=name):
+                response = self.client.post("/score", json=event(**{name: -0.1}))
+                self.assertEqual(response.status_code, 400)
+
+    def test_probability_above_range_is_rejected(self):
+        for name in ("xgb_proba", "encoder_proba"):
+            with self.subTest(name=name):
+                response = self.client.post("/score", json=event(**{name: 1.2}))
+                self.assertEqual(response.status_code, 400)
+
+    def test_non_finite_probability_is_rejected(self):
+        for name in ("xgb_proba", "encoder_proba"):
+            for label, value in (
+                ("nan", "nan"),
+                ("inf", "inf"),
+                ("-inf", "-inf"),
+            ):
+                with self.subTest(name=name, value=label):
+                    response = self.client.post("/score", json=event(**{name: value}))
+                    self.assertEqual(response.status_code, 400)
+
+    def test_none_and_numeric_string_probabilities_are_accepted(self):
+        response = self.client.post(
+            "/score",
+            json=event(manual=True, xgb_proba=None, encoder_proba=None),
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            "/score",
+            json=event(xgb_proba="0.95", encoder_proba="0.4"),
+        )
+        self.assertEqual(response.status_code, 200)
+        alert = response.json()
+        self.assertEqual(alert["model_version"]["function"], "fusion")
+        self.assertEqual(alert["xgb_proba"], 0.95)
+        self.assertEqual(alert["encoder_proba"], 0.4)
+
+    def test_valid_encoder_proba_selects_fusion(self):
+        response = self.client.post("/score", json=event(encoder_proba=0.4))
+        self.assertEqual(response.status_code, 200)
+        alert = response.json()
+        self.assertEqual(alert["model_version"]["function"], "fusion")
+        self.assertEqual(
+            alert["model_version"]["checkpoint"], "fusion(xgb+securebert)"
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
