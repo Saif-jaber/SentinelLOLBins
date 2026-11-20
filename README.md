@@ -72,7 +72,7 @@ Testing was limited to systems and environments for which the team had permissio
 - `tests/` - alert contract, API, and VM adapter tests
 - `results/` - metric tables, model artifacts, alert records, figures
 - `dashboard/` - Streamlit analyst dashboard
-- `api/` - FastAPI `POST /score` wrapper around `score_event`
+- `api/` - FastAPI `POST /score` wrapper around `score_event`, including probability-input validation
 - `scripts/` - authorised Sysmon collection tooling and benign lab files
 
 ## 9. Team and project management
@@ -92,6 +92,22 @@ uvicorn api.main:app --port 8000
 python -m pytest tests rules/tests -q
 ```
 
+### Probability input validation
+
+`POST /score` accepts optional `xgb_proba` and `encoder_proba` values.
+
+Accepted values:
+
+- `null`
+- A finite number in `[0, 1]`
+- A numeric string such as `"0.95"`
+
+Invalid values return HTTP 400:
+
+- Non-numeric values
+- Non-finite values such as `nan`, `inf`, and `-inf`
+- Values outside `[0, 1]`
+
 ## 11. Current status
 
 **Deliverable 1:** introduction, literature review, and methodology are in the report, which is outside this repository.
@@ -101,7 +117,7 @@ The evaluated prototype is complete:
 - Dataset audit, 100k working sample, group-aware splits, and leakage control.
 - XGBoost baseline, SecureBERT 2.0 branch, and validation-selected fusion.
 - E1 rules, E2 model comparison, E3 context ablation, E4 held-out techniques, E5 hybrid-with-rules, benign-heavy testing, grouped confidence intervals, latency, and error analysis. Source: `results/master_results.csv`.
-- Alert-record contract (`score_event`), Streamlit dashboard, and FastAPI `POST /score`.
+- Alert-record contract (`score_event`), Streamlit dashboard, and FastAPI `POST /score` with validated `xgb_proba` and `encoder_proba` inputs.
 - **VM external check complete:** authorisation was granted on 30/10/2026, and Sysmon collection took place on 2026-11-06. The clean set contains 32 Event ID 1 rows across 20 scenarios (12 benign, 8 attack). The adapted table is committed, and the results are in `results/vm_*` and `docs/vm_results_summary.md`. The VM was rolled back and the rollback verified. This is a small external check, not a benchmark.
 - Deliverable-2 evidence is indexed in `docs/artifact_index.md`. Seeds and dependency versions are recorded in `docs/reproducibility.md` and `requirements-lock.txt`.
 
